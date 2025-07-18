@@ -1,6 +1,8 @@
 package skid.krypton.module;
 
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import skid.krypton.event.EventListener;
 import skid.krypton.event.events.KeyEvent;
 import skid.krypton.module.modules.client.Krypton;
@@ -102,7 +104,7 @@ public final class ModuleManager {
 
     @EventListener
     public void a(final KeyEvent keyEvent) {
-        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen) {
+        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen) {
             return;
         }
 

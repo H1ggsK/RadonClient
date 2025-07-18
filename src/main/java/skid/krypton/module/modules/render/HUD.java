@@ -36,7 +36,7 @@ public final class HUD
     private final NumberSetting cornerRadius = new NumberSetting("Corner Radius", 0.0, 10.0, 5.0, 0.5).getValue(EncryptedString.of("Controls the roundness of corners"));
     private final ModeSetting<ModuleListSorting> moduleSortingMode = new ModeSetting("Sort Mode", ModuleListSorting.LENGTH, ModuleListSorting.class).setDescription(EncryptedString.of("How to sort the module list"));
     private final BooleanSetting enableRainbowEffect = new BooleanSetting("Rainbow", false).setDescription(EncryptedString.of("Enables rainbow coloring effect"));
-    private final NumberSetting rainbowSpeed = new NumberSetting("Rainbow Speed", 0.1f, 10.0, 2.0, 0.1f).getValue(EncryptedString.of("Controls the speed of the rainbow effect"));
+    private final NumberSetting rainbowSpeed = new NumberSetting("Rainbow Speed", 0.1, 10.0, 2.0, 0.1).getValue(EncryptedString.of("Controls the speed of the rainbow effect"));
     private final Color primaryColor = new Color(65, 185, 255, 255);
     private final Color secondaryColor = new Color(255, 110, 230, 255);
 
