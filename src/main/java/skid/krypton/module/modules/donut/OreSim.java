@@ -1,6 +1,7 @@
-package skid.krypton.utils.meteorrejects;
+package skid.krypton.module.modules.donut;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
@@ -23,6 +24,9 @@ import skid.krypton.module.setting.NumberSetting;
 import skid.krypton.utils.Dimension;
 import skid.krypton.utils.EncryptedString;
 import skid.krypton.utils.RenderUtils;
+import skid.krypton.utils.meteorrejects.Ore;
+import skid.krypton.utils.meteorrejects.Seed;
+import skid.krypton.utils.meteorrejects.Utils;
 
 import java.awt.*;
 import java.util.*;
@@ -46,6 +50,7 @@ public class OreSim extends Module {
     public OreSim() {
         super(EncryptedString.of("Netherite Finder"), EncryptedString.of("Finds netherites"), -1, Category.DONUT);
         this.addSettings(this.horizontalRadius, this.checkIfAir, this.alpha);
+        this.worldSeed = Seed.of(6608149111735331168L); // Set it once here
     }
 
     @EventListener
@@ -53,7 +58,6 @@ public class OreSim extends Module {
         if (mc.player == null || oreConfig == null) {
             return;
         }
-        Seed.of(Long.valueOf("6608149111735331168"));
         int chunkX = mc.player.getChunkPos().x;
         int chunkZ = mc.player.getChunkPos().z;
 
@@ -97,15 +101,26 @@ public class OreSim extends Module {
     }
 
     private void renderOreBox(MatrixStack matrixStack, Vec3d position, Color color) {
-        float x1 = (float) position.x;
-        float y1 = (float) position.y;
-        float z1 = (float) position.z;
+        // Push new matrix state
+        matrixStack.push();
 
-        float x2 = x1 + 1.0f;
-        float y2 = y1 + 1.0f;
-        float z2 = z1 + 1.0f;
+        // Translate to the correct world position relative to camera
+        Camera camera = mc.gameRenderer.getCamera();
+        Vec3d camPos = camera.getPos();
+        double x = position.x - camPos.x;
+        double y = position.y - camPos.y;
+        double z = position.z - camPos.z;
 
-        RenderUtils.renderFilledBox(matrixStack, x1, y1, z1, x2, y2, z2, color);
+        matrixStack.translate(x, y, z);
+
+        // Render the box (now in proper world space)
+        RenderUtils.renderFilledBox(matrixStack,
+                0, 0, 0,  // Start at origin since we translated
+                1.0f, 1.0f, 1.0f,  // Size remains 1x1x1
+                color);
+
+        // Pop matrix state
+        matrixStack.pop();
     }
 
 
@@ -148,9 +163,7 @@ public class OreSim extends Module {
     }
 
     private void reload() {
-        worldSeed = Seed.of(Long.valueOf("6608149111735331168"));
         oreConfig = Ore.getRegistry(getDimension());
-
         chunkRenderers.clear();
         if (mc.world != null && worldSeed != null) {
             loadVisibleChunks();

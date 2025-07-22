@@ -1,8 +1,5 @@
 package skid.krypton.utils.meteorrejects;
 
-import anticope.rejects.mixin.CountPlacementModifierAccessor;
-import anticope.rejects.mixin.HeightRangePlacementModifierAccessor;
-import anticope.rejects.mixin.RarityFilterPlacementModifierAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -23,6 +20,9 @@ import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
+import skid.krypton.mixin.CountPlacementModifierAccessor;
+import skid.krypton.mixin.HeightRangePlacementModifierAccessor;
+import skid.krypton.mixin.RarityFilterPlacementModifierAccessor;
 import skid.krypton.utils.Dimension;
 
 import java.awt.*;
