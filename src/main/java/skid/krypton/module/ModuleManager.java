@@ -1,6 +1,7 @@
 package skid.krypton.module;
 
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import skid.krypton.event.EventListener;
@@ -58,12 +59,14 @@ public final class ModuleManager {
         this.a(new RtpBaseFinder());
         this.a(new TunnelBaseFinder());
         this.a(new NetheriteFinder());
+        this.a(new NethFinderPlus());
         this.a(new BoneDropper());
         this.a(new AutoSell());
         this.a(new ShulkerDropper());
         this.a(new AntiTrap());
         this.a(new AuctionSniper());
         this.a(new AutoSpawnerSell());
+        this.a(new NoFluidOverlay());
         this.a(new HUD());
         this.a(new PlayerESP());
         this.a(new StorageESP());
@@ -104,7 +107,7 @@ public final class ModuleManager {
 
     @EventListener
     public void a(final KeyEvent keyEvent) {
-        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen) {
+        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof AnvilScreen) {
             return;
         }
 

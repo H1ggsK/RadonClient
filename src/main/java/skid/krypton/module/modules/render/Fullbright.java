@@ -13,7 +13,7 @@ public final class Fullbright extends Module {
 
     public Fullbright() {
         super(EncryptedString.of("Fullbright"), EncryptedString.of("Lights up your world!"), -1, Category.RENDER);
-        this.addSettings(this.minimumLightLevel);
+        this.addSettings(this.minimumLightLevel, this.lightType);
     }
 
     public int getLuminance(LightType type) {

@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class Module implements Serializable {
     private final List<Setting> settings;
     protected final EventManager EVENT_BUS;
-    protected MinecraftClient mc;
+    protected static MinecraftClient mc;
     private CharSequence name;
     private CharSequence description;
     private boolean enabled;

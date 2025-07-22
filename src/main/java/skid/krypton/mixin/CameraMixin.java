@@ -1,5 +1,6 @@
 package skid.krypton.mixin;
 
+import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.BlockView;
@@ -9,9 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import skid.krypton.Krypton;
 import skid.krypton.module.modules.misc.Freecam;
+import skid.krypton.module.modules.render.NoFluidOverlay;
 
 @Mixin({Camera.class})
 public class CameraMixin {
@@ -39,6 +42,17 @@ public class CameraMixin {
         if (freecam.isEnabled()) {
             args.set(0, (Object) (float) freecam.getInterpolatedYaw(this.tickDelta));
             args.set(1, (Object) (float) freecam.getInterpolatedPitch(this.tickDelta));
+        }
+    }
+
+    @Inject(at = @At("HEAD"),
+            method = "getSubmersionType()Lnet/minecraft/block/enums/CameraSubmersionType;",
+            cancellable = true)
+    private void onGetSubmersionType(CallbackInfoReturnable<CameraSubmersionType> cir)
+    {
+        NoFluidOverlay nfo = (NoFluidOverlay) Krypton.INSTANCE.getModuleManager().getModuleByClass(NoFluidOverlay.class);
+        if(nfo.isEnabled() && nfo.removeWater.getValue()) {
+            cir.setReturnValue(CameraSubmersionType.NONE);
         }
     }
 }
