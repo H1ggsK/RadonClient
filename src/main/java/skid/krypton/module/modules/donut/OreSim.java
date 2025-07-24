@@ -2,6 +2,7 @@ package skid.krypton.module.modules.donut;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.session.telemetry.WorldLoadedEvent;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
@@ -13,10 +14,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 import skid.krypton.event.EventListener;
-import skid.krypton.event.events.PlayerRespawnEvent;
-import skid.krypton.event.events.ChunkDataEvent;
-import skid.krypton.event.events.Render3DEvent;
-import skid.krypton.event.events.SetBlockStateEvent;
+import skid.krypton.event.events.*;
 import skid.krypton.module.Category;
 import skid.krypton.module.Module;
 import skid.krypton.module.setting.BooleanSetting;
@@ -24,9 +22,9 @@ import skid.krypton.module.setting.NumberSetting;
 import skid.krypton.utils.Dimension;
 import skid.krypton.utils.EncryptedString;
 import skid.krypton.utils.RenderUtils;
-import skid.krypton.utils.meteorrejects.Ore;
-import skid.krypton.utils.meteorrejects.Seed;
-import skid.krypton.utils.meteorrejects.Utils;
+import skid.krypton.utils.meteor.Ore;
+import skid.krypton.utils.meteor.Seed;
+import skid.krypton.utils.meteor.ChunkUtils;
 
 import java.awt.*;
 import java.util.*;
@@ -54,7 +52,7 @@ public class OreSim extends Module {
     }
 
     @EventListener
-    private void onRender(Render3DEvent event) {
+    private void onRender(RenderOreEvent event) {
         if (mc.player == null || oreConfig == null) {
             return;
         }
@@ -73,7 +71,7 @@ public class OreSim extends Module {
 
     }
 
-    private void renderChunk(int x, int z, Render3DEvent event) {
+    private void renderChunk(int x, int z, RenderOreEvent event) {
         long chunkKey = ChunkPos.toLong(x, z);
 
         if (!chunkRenderers.containsKey(chunkKey)) return;
@@ -88,7 +86,7 @@ public class OreSim extends Module {
                 boolean isAir = state.isAir();
 
                 if (!isAir || checkIfAir.getValue()) {
-                    renderOreBox(event.matrixStack, pos, getAlphaColor(alpha.getIntValue()));
+                    event.renderer.boxLines(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1, getColor(alpha.getIntValue()), 0);
                 }
             }
         }
@@ -96,7 +94,7 @@ public class OreSim extends Module {
 
 
 
-    private Color getAlphaColor(int alpha) {
+    private Color getColor(int alpha) {
         return new Color(191, 64, 191, alpha);
     }
 
@@ -157,7 +155,7 @@ public class OreSim extends Module {
             return;
         }
 
-        for (Chunk chunk : Utils.chunks(false)) {
+        for (Chunk chunk : ChunkUtils.chunks(false)) {
             doMathOnChunk(chunk);
         }
     }

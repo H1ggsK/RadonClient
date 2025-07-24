@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skid.krypton.event.PreInit;
 import skid.krypton.gui.ClickGUI;
 import skid.krypton.manager.ConfigManager;
 import skid.krypton.manager.EventManager;
@@ -34,6 +35,8 @@ public final class Krypton {
             this.screen = null;
             this.EVENT_BUS = new EventManager();
             this.MODULE_MANAGER = new ModuleManager();
+            //EventManager.registerPackage("skid.krypton");
+            //EventManager.init(PreInit.class);
             this.GUI = new ClickGUI();
             configManager = new ConfigManager();
             this.getConfigManager().loadProfile();

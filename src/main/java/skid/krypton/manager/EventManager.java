@@ -1,21 +1,23 @@
+// File: EventManager.java
 package skid.krypton.manager;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 import skid.krypton.Krypton;
-import skid.krypton.event.CancellableEvent;
-import skid.krypton.event.Event;
+import skid.krypton.event.*;
 import skid.krypton.event.EventListener;
-import skid.krypton.event.Listener;
 import skid.krypton.module.Module;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public final class EventManager {
     private final Map<Class<?>, List<Listener>> EVENTS;
+    private static final List<Reflections> reflections = new ArrayList<>();
 
     public EventManager() {
         this.EVENTS = new HashMap<>();
@@ -72,5 +74,57 @@ public final class EventManager {
     public static void b(final Event evt) {
         if (Krypton.INSTANCE == null || Krypton.INSTANCE.getEventBus() == null) return;
         Krypton.INSTANCE.getEventBus().a(evt);
+    }
+
+    // === ReflectInit logic integration ===
+
+    public static void registerPackage(String pkg) {
+        if (pkg != null && !pkg.isBlank()) {
+            reflections.add(new Reflections(pkg, Scanners.MethodsAnnotated));
+        }
+    }
+
+    public static void init(Class<? extends Annotation> annotation) {
+        for (Reflections reflection : reflections) {
+            Set<Method> initTasks = reflection.getMethodsAnnotatedWith(annotation);
+            if (initTasks == null) continue;
+
+            Map<Class<?>, List<Method>> byClass = initTasks.stream().collect(Collectors.groupingBy(Method::getDeclaringClass));
+            Set<Method> left = new HashSet<>(initTasks);
+
+            for (Method m; (m = left.stream().findAny().orElse(null)) != null; ) {
+                reflectInit(m, annotation, left, byClass);
+            }
+        }
+    }
+
+    private static <T extends Annotation> void reflectInit(Method task, Class<T> annotation, Set<Method> left, Map<Class<?>, List<Method>> byClass) {
+        left.remove(task);
+
+        for (Class<?> clazz : getDependencies(task, annotation)) {
+            for (Method m : byClass.getOrDefault(clazz, Collections.emptyList())) {
+                if (left.contains(m)) {
+                    reflectInit(m, annotation, left, byClass);
+                }
+            }
+        }
+
+        try {
+            task.invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Error running @" + annotation.getSimpleName() + " task '" + task.getDeclaringClass().getSimpleName() + "." + task.getName() + "'", e);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Method '" + task.getName() + "' uses Init annotations from non-static context", e);
+        }
+    }
+
+    private static <T extends Annotation> Class<?>[] getDependencies(Method task, Class<T> annotation) {
+        T init = task.getAnnotation(annotation);
+
+        return switch (init) {
+            case PreInit pre -> pre.dependencies();
+            //case PostInit post -> post.dependencies();
+            default -> new Class<?>[]{};
+        };
     }
 }

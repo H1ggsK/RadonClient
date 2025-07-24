@@ -1,9 +1,9 @@
-package skid.krypton.utils.meteorrejects;
+package skid.krypton.utils.meteor;
 
 
 import net.minecraft.world.chunk.Chunk;
 
-public class Utils {
+public class ChunkUtils {
 
     public static Iterable<Chunk> chunks(boolean onlyWithLoadedNeighbours) {
         return () -> new ChunkIterator(onlyWithLoadedNeighbours);

@@ -8,7 +8,9 @@
     "PlayerMoveC2SPacketAccessor"
   ],
   "client": [
+    "BufferRendererAccessor",
     "CameraMixin",
+    "CapabilityTrackerMixin",
     "ChunkOcclusionDataBuilderMixin",
     "ClientChunkMapAccessor",
     "ClientPlayerEntityMixin",

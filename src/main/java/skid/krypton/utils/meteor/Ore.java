@@ -1,4 +1,4 @@
-package skid.krypton.utils.meteorrejects;
+package skid.krypton.utils.meteor;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.*;
