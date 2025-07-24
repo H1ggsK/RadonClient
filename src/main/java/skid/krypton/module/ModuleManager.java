@@ -11,6 +11,7 @@ import skid.krypton.module.modules.client.SelfDestruct;
 import skid.krypton.module.modules.combat.*;
 import skid.krypton.module.modules.donut.*;
 import skid.krypton.module.modules.misc.*;
+import skid.krypton.module.modules.movement.AntiHunger;
 import skid.krypton.module.modules.movement.Flight;
 import skid.krypton.module.modules.movement.NoFall;
 import skid.krypton.module.modules.render.*;
@@ -42,6 +43,7 @@ public final class ModuleManager {
         this.a(new AutoCrystal());
         this.a(new DoubleAnchor());
         this.a(new KillauraLegit());
+        this.a(new AntiHunger());
         this.a(new Flight());
         this.a(new NoFall());
         this.a(new FastPlace());
@@ -58,7 +60,7 @@ public final class ModuleManager {
         this.a(new AutoTPA());
         this.a(new RtpBaseFinder());
         this.a(new TunnelBaseFinder());
-        this.a(new OreSim());
+        //this.a(new OreSim());
         this.a(new BoneDropper());
         this.a(new AutoSell());
         this.a(new ShulkerDropper());

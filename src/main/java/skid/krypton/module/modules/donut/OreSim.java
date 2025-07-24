@@ -2,7 +2,6 @@ package skid.krypton.module.modules.donut;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.session.telemetry.WorldLoadedEvent;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;

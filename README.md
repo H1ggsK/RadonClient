@@ -12,5 +12,7 @@ Changelog:
 - Added Anti Consume for fireworks
 - Added KillauraLegit
 - Added NoFluidOverlay
+- Added AntiHunger
+- Working on improving NethFinder, it is currently disabled
 
 ### THE ORIGINAL SOURCE IS NOT MINE, IT COMES FROM [KRYPTONCLIENT.COM](https://kryptonclient.com).
