@@ -1,6 +1,7 @@
 package skid.krypton.module.modules.donut;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
@@ -87,6 +88,11 @@ public class OreSim extends Module {
         for (Map.Entry<Ore, Set<Vec3d>> oreEntry : chunk.entrySet()) {
             for (Vec3d pos : oreEntry.getValue()) {
                 BlockPos blockPos = new BlockPos((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z));
+                if (BlockUtil.isExposed(blockPos)) {
+                    if (!BlockUtil.isBlockAtPosition(blockPos, Blocks.ANCIENT_DEBRIS)) {
+                        return;
+                    }
+                }
                 BlockState state = mc.world.getBlockState(blockPos);
 
                 boolean isAir = state.isAir();
@@ -122,7 +128,6 @@ public class OreSim extends Module {
         if (tracers.getValue()) {
             RenderUtils.renderLine(event.matrixStack, color, mc.crosshairTarget.getPos(), new Vec3d(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
         }
-
 
         matrixStack.pop();
     }

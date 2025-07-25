@@ -9,6 +9,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.WorldChunk;
 import skid.krypton.Krypton;
 
@@ -65,5 +66,29 @@ public final class BlockUtil {
         if (result.isAccepted() && result.shouldSwingHand() && shouldSwingHand) {
             mc.player.swingHand(Hand.MAIN_HAND);
         }
+    }
+
+    public static boolean isExposed(final BlockPos blockPos) {
+        // Check all 6 direct sides (up, down, north, south, east, west)
+        for (Direction direction : Direction.values()) {
+            BlockPos adjacentPos = blockPos.offset(direction);
+            if (mc.world.getBlockState(adjacentPos).getBlock() == Blocks.AIR) {
+                return true;
+            }
+        }
+
+        // Check the 8 corners (diagonals)
+        for (int x = -1; x <= 1; x += 2) {
+            for (int y = -1; y <= 1; y += 2) {
+                for (int z = -1; z <= 1; z += 2) {
+                    BlockPos diagonalPos = blockPos.add(x, y, z);
+                    if (mc.world.getBlockState(diagonalPos).getBlock() == Blocks.AIR) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
