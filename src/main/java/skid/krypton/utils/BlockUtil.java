@@ -69,20 +69,19 @@ public final class BlockUtil {
     }
 
     public static boolean isExposed(final BlockPos blockPos) {
-        // Check all 6 direct sides (up, down, north, south, east, west)
-        for (Direction direction : Direction.values()) {
-            BlockPos adjacentPos = blockPos.offset(direction);
-            if (mc.world.getBlockState(adjacentPos).getBlock() == Blocks.AIR) {
-                return true;
-            }
-        }
+        // Check all positions in 3x3x3 cube except the center
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
+                    // Skip the center block (0,0,0)
+                    if (x == 0 && y == 0 && z == 0) {
+                        continue;
+                    }
 
-        // Check the 8 corners (diagonals)
-        for (int x = -1; x <= 1; x += 2) {
-            for (int y = -1; y <= 1; y += 2) {
-                for (int z = -1; z <= 1; z += 2) {
-                    BlockPos diagonalPos = blockPos.add(x, y, z);
-                    if (mc.world.getBlockState(diagonalPos).getBlock() == Blocks.AIR) {
+                    BlockPos checkPos = blockPos.add(x, y, z);
+                    Block block = mc.world.getBlockState(checkPos).getBlock();
+
+                    if (block == Blocks.AIR || block == Blocks.LAVA) {
                         return true;
                     }
                 }

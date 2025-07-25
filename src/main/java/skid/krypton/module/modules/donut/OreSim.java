@@ -182,6 +182,7 @@ public class OreSim extends Module {
 
     @EventListener
     public void onChunkData(ChunkDataEvent event) {
+        if (getDimension() != Dimension.Nether) return;
         doMathOnChunk(event.chunk());
     }
 
