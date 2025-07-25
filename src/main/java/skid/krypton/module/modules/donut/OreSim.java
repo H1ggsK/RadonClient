@@ -24,6 +24,7 @@ import skid.krypton.utils.RenderUtils;
 import skid.krypton.utils.meteor.Ore;
 import skid.krypton.utils.meteor.Seed;
 import skid.krypton.utils.meteor.ChunkUtils;
+import skid.krypton.utils.modules.ModuleTogglers;
 
 import java.awt.*;
 import java.util.*;
@@ -42,16 +43,17 @@ public class OreSim extends Module {
     private final NumberSetting horizontalRadius = new NumberSetting("Chunk Range", 1, 10, 5, 1);
     private final BooleanSetting checkIfAir = new BooleanSetting("Check if air", true);
     private final NumberSetting alpha = new NumberSetting("Alpha value", 0, 255, 125, 1);
+    private final BooleanSetting tracers = new BooleanSetting("Render Tracers", true);
 
 
     public OreSim() {
         super(EncryptedString.of("Netherite Finder"), EncryptedString.of("Finds netherites"), -1, Category.DONUT);
-        this.addSettings(this.horizontalRadius, this.checkIfAir, this.alpha);
-        this.worldSeed = Seed.of(6608149111735331168L); // Set it once here
+        this.addSettings(this.horizontalRadius, this.alpha, this.tracers);
+        this.worldSeed = Seed.of(6608149111735331168L);
     }
 
     @EventListener
-    private void onRender(RenderOreEvent event) {
+    private void onRender(Render3DEvent event) {
         if (mc.player == null || oreConfig == null) {
             return;
         }
@@ -67,10 +69,14 @@ public class OreSim extends Module {
                 renderChunk(x, chunkZ - range + rangeVal + 1, event);
             }
         }
-
     }
 
-    private void renderChunk(int x, int z, RenderOreEvent event) {
+    @EventListener
+    private void onJoin(GameJoinedEvent event) {
+        ModuleTogglers.toggleOreSim();
+    }
+
+    private void renderChunk(int x, int z, Render3DEvent event) {
         long chunkKey = ChunkPos.toLong(x, z);
 
         if (!chunkRenderers.containsKey(chunkKey)) return;
@@ -85,38 +91,38 @@ public class OreSim extends Module {
                 boolean isAir = state.isAir();
 
                 if (!isAir || checkIfAir.getValue()) {
-                    event.renderer.boxLines(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1, getColor(alpha.getIntValue()), 0);
+                    renderOreBox(event, event.matrixStack, pos, getColor(alpha.getIntValue()));
                 }
             }
         }
     }
 
-
-
     private Color getColor(int alpha) {
         return new Color(191, 64, 191, alpha);
     }
 
-    private void renderOreBox(MatrixStack matrixStack, Vec3d position, Color color) {
-        // Push new matrix state
+    private void renderOreBox(Render3DEvent event, MatrixStack matrixStack, Vec3d position, Color color) {
         matrixStack.push();
 
-        // Translate to the correct world position relative to camera
         Camera camera = mc.gameRenderer.getCamera();
-        Vec3d camPos = camera.getPos();
-        double x = position.x - camPos.x;
-        double y = position.y - camPos.y;
-        double z = position.z - camPos.z;
+        if (camera != null) {
+            Vec3d camPos = RenderUtils.getCameraPos();
+            MatrixStack matrices = event.matrixStack;
+            matrices.push();
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0f));
+            matrices.translate(-camPos.x, -camPos.y, -camPos.z);
+        }
 
-        matrixStack.translate(x, y, z);
-
-        // Render the box (now in proper world space)
         RenderUtils.renderFilledBox(matrixStack,
-                0, 0, 0,  // Start at origin since we translated
-                1.0f, 1.0f, 1.0f,  // Size remains 1x1x1
+                (float) position.getX(), (float) position.getY(), (float) position.getZ(),
+                (float) position.getX()+1, (float) position.getY()+1, (float) position.getZ()+1,
                 color);
+        if (tracers.getValue()) {
+            RenderUtils.renderLine(event.matrixStack, color, mc.crosshairTarget.getPos(), new Vec3d(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
+        }
 
-        // Pop matrix state
+
         matrixStack.pop();
     }
 

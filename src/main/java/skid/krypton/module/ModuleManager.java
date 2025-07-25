@@ -60,7 +60,7 @@ public final class ModuleManager {
         this.a(new AutoTPA());
         this.a(new RtpBaseFinder());
         this.a(new TunnelBaseFinder());
-        //this.a(new OreSim());
+        this.a(new OreSim());
         this.a(new BoneDropper());
         this.a(new AutoSell());
         this.a(new ShulkerDropper());

@@ -24,7 +24,7 @@ public abstract class Module implements Serializable {
     public Module(final CharSequence name, final CharSequence description, final int keybind, final Category category) {
         this.settings = new ArrayList<Setting>();
         this.EVENT_BUS = Krypton.INSTANCE.getEventBus();
-        this.mc = MinecraftClient.getInstance();
+        mc = MinecraftClient.getInstance();
         this.i = false;
         this.name = name;
         this.description = description;
