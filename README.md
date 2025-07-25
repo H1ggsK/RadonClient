@@ -4,7 +4,7 @@ This is a fork of the original Krypton, I'm adding features such as Fullbright a
 I fixed AutoInvTotem, as it was not working.
 
 Changelog:
-- Fixed AutoInvTotemmake
+- Fixed AutoInvTotem
 - Added Fullbright
 - Added NoFall
 - Added Flight (including AntiKick from TrouserStreak)

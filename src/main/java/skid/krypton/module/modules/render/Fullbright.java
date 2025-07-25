@@ -16,6 +16,16 @@ public final class Fullbright extends Module {
         this.addSettings(this.minimumLightLevel, this.lightType);
     }
 
+    @Override
+    public void onEnable() {
+        mc.worldRenderer.reload();
+    }
+
+    @Override
+    public void onDisable() {
+        mc.worldRenderer.reload();
+    }
+
     public int getLuminance(LightType type) {
         if (!isEnabled() || type != lightType.getValue()) {
             return 0;
