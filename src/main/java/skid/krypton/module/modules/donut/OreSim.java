@@ -160,6 +160,7 @@ public class OreSim extends Module {
         if (mc.player == null) {
             return;
         }
+        if (getDimension() != Dimension.Nether) return;
 
         for (WorldChunk chunk : BlockUtil.getLoadedChunks().toList()) {
             doMathOnChunk(chunk);
