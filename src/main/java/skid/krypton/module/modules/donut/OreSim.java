@@ -12,18 +12,19 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.WorldChunk;
 import skid.krypton.event.EventListener;
 import skid.krypton.event.events.*;
 import skid.krypton.module.Category;
 import skid.krypton.module.Module;
 import skid.krypton.module.setting.BooleanSetting;
 import skid.krypton.module.setting.NumberSetting;
+import skid.krypton.utils.BlockUtil;
 import skid.krypton.utils.Dimension;
 import skid.krypton.utils.EncryptedString;
 import skid.krypton.utils.RenderUtils;
 import skid.krypton.utils.meteor.Ore;
 import skid.krypton.utils.meteor.Seed;
-import skid.krypton.utils.meteor.ChunkUtils;
 import skid.krypton.utils.modules.ModuleTogglers;
 
 import java.awt.*;
@@ -160,7 +161,7 @@ public class OreSim extends Module {
             return;
         }
 
-        for (Chunk chunk : ChunkUtils.chunks(false)) {
+        for (WorldChunk chunk : BlockUtil.getLoadedChunks().toList()) {
             doMathOnChunk(chunk);
         }
     }
@@ -178,7 +179,7 @@ public class OreSim extends Module {
         doMathOnChunk(event.chunk());
     }
 
-    private void doMathOnChunk(Chunk chunk) {
+    private void doMathOnChunk(WorldChunk chunk) {
 
         var chunkPos = chunk.getPos();
         long chunkKey = chunkPos.toLong();

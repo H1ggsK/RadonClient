@@ -15,15 +15,11 @@ public final class NoFall extends Module {
 
     @EventListener
     private void onSendPacket(PacketSendEvent event) {
+        if (mc == null) return;
         if (mc.player.getAbilities().creativeMode) return;
 
-
-        //if (!Modules.get().isActive(Flight.class)) {
         if (mc.player.isFallFlying()) return;
         if (mc.player.getVelocity().y > -0.5) return;
         ((PlayerMoveC2SPacketAccessor) event.getPacket()).setOnGround(true);
-        /*} else {
-            ((PlayerMoveC2SPacketAccessor) event.getPacket()).setOnGround(true);
-        }*/
     }
 }

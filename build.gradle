@@ -33,7 +33,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
 
-    shadowImpl('com.seedfinding:mc_core:1.210.0') { transitive = false }
+    modImplementation('com.seedfinding:mc_core:1.210.0') { transitive = false }
+    shadowImpl 'com.seedfinding:mc_core:1.210.0'
     implementation("org.reflections:reflections:0.10.2")
 }
 
@@ -51,4 +52,11 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+    from {
+        configurations.shadowImpl.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

@@ -1,7 +1,6 @@
 package skid.krypton.event.events;
 
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 import skid.krypton.event.CancellableEvent;
 
@@ -16,7 +15,7 @@ public class ChunkDataEvent extends CancellableEvent {
         this.chunk = mc.world.getChunk(packet.getChunkX(), packet.getChunkZ());
     }
 
-    public Chunk chunk() {
+    public WorldChunk chunk() {
         return chunk;
     }
 }
