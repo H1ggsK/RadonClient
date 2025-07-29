@@ -60,7 +60,6 @@ public final class ModuleManager {
         this.a(new AutoTPA());
         this.a(new RtpBaseFinder());
         this.a(new TunnelBaseFinder());
-        this.a(new NethFinder());
         this.a(new BoneDropper());
         this.a(new AutoSell());
         this.a(new ShulkerDropper());
@@ -69,6 +68,7 @@ public final class ModuleManager {
         this.a(new AutoSpawnerSell());
         this.a(new NoFluidOverlay());
         this.a(new HUD());
+        this.a(new NethFinder());
         this.a(new PlayerESP());
         this.a(new StorageESP());
         this.a(new TargetHUD());

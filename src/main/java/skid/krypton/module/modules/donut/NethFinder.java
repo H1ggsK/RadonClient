@@ -53,7 +53,7 @@ public class NethFinder extends Module {
 
 
     public NethFinder() {
-        super(EncryptedString.of("Netherite Finder"), EncryptedString.of("Finds netherites"), -1, Category.DONUT);
+        super(EncryptedString.of("Netherite Finder"), EncryptedString.of("Finds ancient debris"), -1, Category.RENDER);
         this.addSettings(this.horizontalRadius, this.alpha, this.tracers, this.antixray, this.seedString);
         this.worldSeed = Seed.of(seedString.getValue());
         this.seedChanged = worldSeed.seed;
