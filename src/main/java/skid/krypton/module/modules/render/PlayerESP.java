@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 public final class PlayerESP extends Module {
     private final NumberSetting alpha = new NumberSetting(EncryptedString.of("Alpha"), 0.0, 255.0, 100.0, 1.0);
     private final NumberSetting lineWidth = new NumberSetting(EncryptedString.of("Line width"), 1.0, 10.0, 1.0, 1.0);
-    private final BooleanSetting tracers = new BooleanSetting(EncryptedString.of("Tracers"), false).setDescription(EncryptedString.of("Draws a line from your player to the other"));
+    private final BooleanSetting tracers = new BooleanSetting(EncryptedString.of("Tracers"), true).setDescription(EncryptedString.of("Draws a line from your player to the other"));
 
     public PlayerESP() {
         super(EncryptedString.of("Player ESP"), EncryptedString.of("Renders players through walls"), -1, Category.RENDER);

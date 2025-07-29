@@ -1,5 +1,9 @@
 package skid.krypton.module.modules.misc;
 
+import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -93,6 +97,9 @@ public final class Freecam extends Module {
 
     @EventListener
     private void handleTickEvent(final StartTickEvent startTickEvent) {
+        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof AnvilScreen) {
+            return;
+        }
         if (this.mc.cameraEntity.isInsideWall()) {
             this.mc.getCameraEntity().noClip = true;
         }
@@ -147,6 +154,9 @@ public final class Freecam extends Module {
 
     @EventListener
     public void onKey(final KeyEvent keyEvent) {
+        if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof AnvilScreen) {
+            return;
+        }
         if (KeyUtils.isKeyPressed(292)) {
             return;
         }

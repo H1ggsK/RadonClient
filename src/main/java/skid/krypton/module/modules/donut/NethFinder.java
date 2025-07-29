@@ -6,6 +6,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.Heightmap;
@@ -20,13 +21,14 @@ import skid.krypton.module.Category;
 import skid.krypton.module.Module;
 import skid.krypton.module.setting.BooleanSetting;
 import skid.krypton.module.setting.NumberSetting;
+import skid.krypton.module.setting.StringSetting;
 import skid.krypton.utils.BlockUtil;
 import skid.krypton.utils.Dimension;
 import skid.krypton.utils.EncryptedString;
 import skid.krypton.utils.RenderUtils;
 import skid.krypton.utils.meteor.Ore;
 import skid.krypton.utils.meteor.Seed;
-import skid.krypton.utils.modules.ModuleTogglers;
+import skid.krypton.utils.DimensionUtils;
 
 import java.awt.*;
 import java.util.*;
@@ -35,30 +37,42 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 
-public class OreSim extends Module {
+public class NethFinder extends Module {
 
     private final Map<Long, Map<Ore, Set<Vec3d>>> chunkRenderers = new ConcurrentHashMap<>();
-    private Seed worldSeed = null;
+    private Seed worldSeed;
     private Map<RegistryKey<Biome>, List<Ore>> oreConfig;
-
+    private long seedChanged;
 
     private final NumberSetting horizontalRadius = new NumberSetting("Chunk Range", 1, 10, 5, 1);
     private final BooleanSetting checkIfAir = new BooleanSetting("Check if air", true);
     private final NumberSetting alpha = new NumberSetting("Alpha value", 0, 255, 125, 1);
-    private final BooleanSetting tracers = new BooleanSetting("Render Tracers", true);
+    private final BooleanSetting tracers = new BooleanSetting("Tracers", true);
+    private final BooleanSetting antixray = new BooleanSetting("Anti-xray Installed", true);
+    private final StringSetting seedString = new StringSetting("Seed", "6608149111735331168");
 
 
-    public OreSim() {
+    public NethFinder() {
         super(EncryptedString.of("Netherite Finder"), EncryptedString.of("Finds netherites"), -1, Category.DONUT);
-        this.addSettings(this.horizontalRadius, this.alpha, this.tracers);
-        this.worldSeed = Seed.of(6608149111735331168L);
+        this.addSettings(this.horizontalRadius, this.alpha, this.tracers, this.antixray, this.seedString);
+        this.worldSeed = Seed.of(seedString.getValue());
+        this.seedChanged = worldSeed.seed;
     }
 
     @EventListener
     private void onRender(Render3DEvent event) {
-        if (mc.player == null || oreConfig == null) {
+        try {
+            long currentSeed = Long.parseLong(seedString.getValue());
+            if (currentSeed != seedChanged) {
+                seedChanged = currentSeed;
+                reload();
+            }
+        } catch (NumberFormatException e) {
+            seedString.setValue(String.valueOf(seedChanged));
+            mc.player.sendMessage(Text.of("Seed is too large to be parsed as long!"), false);
             return;
         }
+
         int chunkX = mc.player.getChunkPos().x;
         int chunkZ = mc.player.getChunkPos().z;
 
@@ -75,7 +89,7 @@ public class OreSim extends Module {
 
     @EventListener
     private void onJoin(GameJoinedEvent event) {
-        ModuleTogglers.toggleOreSim();
+        reload();
     }
 
     private void renderChunk(int x, int z, Render3DEvent event) {
@@ -87,16 +101,21 @@ public class OreSim extends Module {
 
         for (Map.Entry<Ore, Set<Vec3d>> oreEntry : chunk.entrySet()) {
             for (Vec3d pos : oreEntry.getValue()) {
-                BlockPos blockPos = new BlockPos((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z));
-                if (BlockUtil.isExposed(blockPos)) {
-                    if (!BlockUtil.isBlockAtPosition(blockPos, Blocks.ANCIENT_DEBRIS)) {
-                        return;
+                BlockPos blockPos = new BlockPos(
+                        (int) Math.floor(pos.x),
+                        (int) Math.floor(pos.y),
+                        (int) Math.floor(pos.z)
+                );
+
+                if (BlockUtil.debrisIsExposed(blockPos)) {
+                    boolean isDebris = BlockUtil.isBlockAtPosition(blockPos, Blocks.ANCIENT_DEBRIS);
+                    if (isDebris && antixray.getValue()) {
+                        continue;
                     }
                 }
+
                 BlockState state = mc.world.getBlockState(blockPos);
-
                 boolean isAir = state.isAir();
-
                 if (!isAir || checkIfAir.getValue()) {
                     renderOreBox(event, event.matrixStack, pos, getColor(alpha.getIntValue()));
                 }
@@ -132,7 +151,6 @@ public class OreSim extends Module {
         matrixStack.pop();
     }
 
-
     @EventListener
     private void onBlockUpdate(SetBlockStateEvent event) {
         if (event.newState.isOpaque()) return;
@@ -165,7 +183,7 @@ public class OreSim extends Module {
         if (mc.player == null) {
             return;
         }
-        if (getDimension() != Dimension.Nether) return;
+        if (DimensionUtils.getDimension() != Dimension.Nether) return;
 
         for (WorldChunk chunk : BlockUtil.getLoadedChunks().toList()) {
             doMathOnChunk(chunk);
@@ -173,7 +191,15 @@ public class OreSim extends Module {
     }
 
     private void reload() {
-        oreConfig = Ore.getRegistry(getDimension());
+        try {
+            worldSeed = Seed.of(seedString.getValue()); // Update the seed
+            seedChanged = worldSeed.seed;
+        } catch (NumberFormatException e) {
+            seedString.setValue(String.valueOf(seedChanged));
+            return;
+        }
+
+        oreConfig = Ore.getRegistry(DimensionUtils.getDimension());
         chunkRenderers.clear();
         if (mc.world != null && worldSeed != null) {
             loadVisibleChunks();
@@ -182,7 +208,7 @@ public class OreSim extends Module {
 
     @EventListener
     public void onChunkData(ChunkDataEvent event) {
-        if (getDimension() != Dimension.Nether) return;
+        if (DimensionUtils.getDimension() != Dimension.Nether) return;
         doMathOnChunk(event.chunk());
     }
 
@@ -418,15 +444,5 @@ public class OreSim extends Module {
 
     private int randomCoord(ChunkRandom random, int size) {
         return Math.round((random.nextFloat() - random.nextFloat()) * (float) size);
-    }
-
-    public static Dimension getDimension() {
-        if (mc.world == null) return Dimension.Overworld;
-
-        return switch (mc.world.getRegistryKey().getValue().getPath()) {
-            case "the_nether" -> Dimension.Nether;
-            case "the_end" -> Dimension.End;
-            default -> Dimension.Overworld;
-        };
     }
 }

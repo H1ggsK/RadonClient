@@ -9,12 +9,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.WorldChunk;
-import skid.krypton.Krypton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -68,7 +64,7 @@ public final class BlockUtil {
         }
     }
 
-    public static boolean isExposed(final BlockPos blockPos) {
+    public static boolean debrisIsExposed(final BlockPos blockPos) {
         // Check all positions in 3x3x3 cube except the center
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
