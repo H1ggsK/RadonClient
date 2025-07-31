@@ -23,11 +23,15 @@ public final class AntiHunger extends Module {
 
     @Override
     public void onEnable() {
-        lastOnGround = mc.player.isOnGround();
+        if (mc.player != null) {
+            lastOnGround = mc.player.isOnGround();
+        }
     }
 
     @EventListener
     private void onSendPacket(PacketSendEvent event) {
+        if (mc.player == null) return;
+
         if (ignorePacket && event.packet instanceof PlayerMoveC2SPacket) {
             ignorePacket = false;
             return;
@@ -46,11 +50,12 @@ public final class AntiHunger extends Module {
 
     @EventListener
     private void onTick(SendMovementPacketsEvent event) {
+        if (mc.player == null) return;
+
         if (mc.player.isOnGround() && !lastOnGround && onGround.getValue()) {
             ignorePacket = true; // prevents you from not taking fall damage
         }
 
         lastOnGround = mc.player.isOnGround();
     }
-
 }

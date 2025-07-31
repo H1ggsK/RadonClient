@@ -1,4 +1,4 @@
-package skid.krypton.module.modules.donut;
+package skid.krypton.module.modules.render;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,6 +15,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.gen.HeightContext;
 import skid.krypton.event.EventListener;
 import skid.krypton.event.events.*;
 import skid.krypton.module.Category;
@@ -48,7 +49,7 @@ public class NethFinder extends Module {
     private final BooleanSetting checkIfAir = new BooleanSetting("Check if air", true);
     private final NumberSetting alpha = new NumberSetting("Alpha value", 0, 255, 125, 1);
     private final BooleanSetting tracers = new BooleanSetting("Tracers", true);
-    private final BooleanSetting antixray = new BooleanSetting("Anti-xray Installed", true);
+    private final BooleanSetting antixray = new BooleanSetting("Anti-xray Installed", false);
     private final StringSetting seedString = new StringSetting("Seed", "6608149111735331168");
 
 
@@ -242,6 +243,7 @@ public class NethFinder extends Module {
         HashMap<Ore, Set<Vec3d>> h = new HashMap<>();
 
         for (Ore ore : oreSet) {
+            HeightContext context = ore.getHeightContext();
 
             HashSet<Vec3d> ores = new HashSet<>();
 
@@ -257,7 +259,7 @@ public class NethFinder extends Module {
 
                 int x = random.nextInt(16) + chunkX;
                 int z = random.nextInt(16) + chunkZ;
-                int y = ore.heightProvider.get(random, ore.heightContext);
+                int y = ore.heightProvider.get(random, context);
                 BlockPos origin = new BlockPos(x,y,z);
 
                 RegistryKey<Biome> biome = chunk.getBiomeForNoiseGen(x,y,z).getKey().get();

@@ -79,13 +79,16 @@ public class Ore {
             int genStep,
             Color color
     ) {
-        var orePlacement = oreRegistry.getOrThrow(oreKey).value();
-
-        int index = indexer.get(genStep).indexMapping().applyAsInt(orePlacement);
-
-        Ore ore = new Ore(orePlacement, genStep, index, color);
-
-        map.put(orePlacement, ore);
+        try {
+            var orePlacement = oreRegistry.getOrThrow(oreKey).value();
+            int index = indexer.get(genStep).indexMapping().applyAsInt(orePlacement);
+            Ore ore = new Ore(orePlacement, genStep, index, color);
+            map.put(orePlacement, ore);
+        } catch (Exception e) {
+            // Handle or log the error appropriately
+            System.err.println("Failed to register ore: " + oreKey.getValue());
+            e.printStackTrace();
+        }
     }
 
     public int step;
@@ -103,34 +106,41 @@ public class Ore {
         this.step = step;
         this.index = index;
         this.color = color;
-        int bottom = MinecraftClient.getInstance().world.getBottomY();
-        int height = MinecraftClient.getInstance().world.getDimension().logicalHeight();
-        this.heightContext = new HeightContext(null, HeightLimitView.create(bottom, height));
-
 
         for (PlacementModifier modifier : feature.placementModifiers()) {
             if (modifier instanceof CountPlacementModifier) {
                 this.count = ((CountPlacementModifierAccessor) modifier).getCount();
-
             } else if (modifier instanceof HeightRangePlacementModifier) {
                 this.heightProvider = ((HeightRangePlacementModifierAccessor) modifier).getHeight();
-
             } else if (modifier instanceof RarityFilterPlacementModifier) {
                 this.rarity = ((RarityFilterPlacementModifierAccessor) modifier).getChance();
             }
         }
 
         FeatureConfig featureConfig = feature.feature().value().config();
-
         if (featureConfig instanceof OreFeatureConfig oreFeatureConfig) {
             this.discardOnAirChance = oreFeatureConfig.discardOnAirChance;
             this.size = oreFeatureConfig.size;
         } else {
-            throw new IllegalStateException("config for " + feature + "is not OreFeatureConfig.class");
+            throw new IllegalStateException("Config for " + feature + " is not OreFeatureConfig.class");
         }
 
-        if (feature.feature().value().feature() instanceof ScatteredOreFeature) {
-            this.scattered = true;
+        this.scattered = feature.feature().value().feature() instanceof ScatteredOreFeature;
+    }
+
+    public synchronized HeightContext getHeightContext() {
+        if (heightContext == null) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.world != null) {
+                int bottom = client.world.getBottomY();
+                int height = client.world.getDimension().logicalHeight();
+                heightContext = new HeightContext(null, HeightLimitView.create(bottom, height));
+            }
         }
+        return heightContext;
+    }
+
+    public boolean isHeightContextReady() {
+        return heightContext != null;
     }
 }

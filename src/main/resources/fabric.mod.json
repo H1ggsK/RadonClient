@@ -1,18 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "betterf3",
-  "version": "11.0.1",
-  "name": "BetterF3",
-  "description": "Replaces Minecraft's original debug HUD with a highly customizable, more human-readable HUD.",
+  "id": "krypton",
+  "version": "1.6.1",
+  "name": "Krypton Client",
+  "description": "Ghost client designed for Donut SMP",
   "icon": "icon.png",
   "authors": [
-    "cominixo",
-    "TreyRuffy"
+    "H1ggsK"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/betterf3",
-    "sources": "https://github.com/TreyRuffy/BetterF3.git",
-    "issues": "https://github.com/TreyRuffy/BetterF3/issues/"
+    "sources": "https://github.com/H1ggsK/KryptonClient.git",
+    "issues": "https://github.com/H1ggsK/KryptonClient/issues/"
   },
   "license": "MIT",
   "environment": "client",
@@ -25,18 +23,7 @@
     "fabricloader": ">=0.15.11",
     "minecraft": "1.21.1"
   },
-  "recommends": {
-    "modmenu": ">=10.0.0"
-  },
   "mixins": [
     "client.mixins.json"
-  ],
-  "jars": [
-    {
-      "file": "META-INF/jars/cloth-config-fabric-15.0.127-fabric.jar"
-    },
-    {
-      "file": "META-INF/jars/fabric-resource-loader-v0-1.1.3+b559734490.jar"
-    }
   ]
 }

@@ -7,7 +7,7 @@ import skid.krypton.utils.EncryptedString;
 
 public final class NoFluidOverlay extends Module {
     public final BooleanSetting removeWater = new BooleanSetting(EncryptedString.of("Water"), true);
-    public final BooleanSetting removeLava = new BooleanSetting(EncryptedString.of("Water"), true);
+    public final BooleanSetting removeLava = new BooleanSetting(EncryptedString.of("Lava"), true);
 
     public NoFluidOverlay() {
         super(EncryptedString.of("NoFluidOverlay"), EncryptedString.of("Removes the fluid overlay from water and fire!"), -1, Category.RENDER);

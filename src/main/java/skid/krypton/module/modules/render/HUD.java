@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class HUD
         extends Module {
-    private static final CharSequence watermarkText = EncryptedString.of("Krypton+ Free Edition");
+    private static final CharSequence watermarkText = EncryptedString.of("Krypton Client");
     private static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
     private final BooleanSetting showWatermark = new BooleanSetting(EncryptedString.of("Watermark"), true).setDescription(EncryptedString.of("Shows client name on screen"));
     private final BooleanSetting showInfo = new BooleanSetting(EncryptedString.of("Info"), true).setDescription(EncryptedString.of("Shows system information"));
@@ -93,7 +93,7 @@ public final class HUD
     private void renderInfo(DrawContext drawContext) {
         String string = this.getPingInfo();
         String string2 = "FPS: " + this.mc.getCurrentFps() + " | ";
-        String string3 = this.mc.getCurrentServerEntry() == null ? "Single Player" : this.mc.getCurrentServerEntry().address;
+        String string3 = this.mc.getCurrentServerEntry() == null ? "Singleplayer" : this.mc.getCurrentServerEntry().address;
         int n = TextRenderer.getWidth(string2);
         int n2 = TextRenderer.getWidth(string);
         RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 30.0, 5.0f + (float)(n + n2 + TextRenderer.getWidth(string3)) + 9.0f, 50.0, this.cornerRadius.getValue(), 15.0);

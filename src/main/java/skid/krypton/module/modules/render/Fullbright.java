@@ -18,12 +18,12 @@ public final class Fullbright extends Module {
 
     @Override
     public void onEnable() {
-        mc.worldRenderer.reload();
+        try { mc.worldRenderer.reload(); } catch (Exception ignored) {}
     }
 
     @Override
     public void onDisable() {
-        mc.worldRenderer.reload();
+        try { mc.worldRenderer.reload(); } catch (Exception ignored) {}
     }
 
     public int getLuminance(LightType type) {
