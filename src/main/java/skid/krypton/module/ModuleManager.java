@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static skid.krypton.Krypton.mc;
+
 public final class ModuleManager {
-    private final List<Module> modules;
+    public final List<Module> modules;
 
     public ModuleManager() {
         this.modules = new ArrayList<>();
@@ -118,6 +120,17 @@ public final class ModuleManager {
                     module.toggle();
                 }
             });
+        }
+
+        if (mc.currentScreen != null || mc.getOverlay() != null) return;
+        String prefix = skid.krypton.module.modules.client.Krypton.commandPrefix.getValue();
+        if (prefix == null || prefix.isEmpty()) return;
+        char c = prefix.charAt(0);
+        if (keyEvent.mode == 1 && keyEvent.key == (int) c) {
+            keyEvent.cancel();
+            ChatScreen chat = new ChatScreen(prefix);
+            mc.setScreen(chat);
+            mc.setScreen(chat);
         }
     }
 }

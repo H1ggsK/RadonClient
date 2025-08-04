@@ -41,30 +41,31 @@ public final class Freecam extends Module {
 
     @Override
     public void onEnable() {
-        if (this.mc.player == null) {
+        if (mc == null) return;
+        if (mc.player == null) {
             this.toggle();
             return;
         }
-        this.mc.options.getFovEffectScale().setValue(0.0);
-        this.mc.options.getBobView().setValue(false);
-        this.yaw = this.mc.player.getYaw();
-        this.pitch = this.mc.player.getPitch();
-        this.currentPerspective = this.mc.options.getPerspective();
+        mc.options.getFovEffectScale().setValue(0.0);
+        mc.options.getBobView().setValue(false);
+        this.yaw = mc.player.getYaw();
+        this.pitch = mc.player.getPitch();
+        this.currentPerspective = mc.options.getPerspective();
         this.movementSpeed = this.speed.getValue();
-        Utils.copyVector(this.currentPosition, this.mc.gameRenderer.getCamera().getPos());
-        Utils.copyVector(this.previousPosition, this.mc.gameRenderer.getCamera().getPos());
-        if (this.mc.options.getPerspective() == Perspective.THIRD_PERSON_FRONT) {
+        Utils.copyVector(this.currentPosition, mc.gameRenderer.getCamera().getPos());
+        Utils.copyVector(this.previousPosition, mc.gameRenderer.getCamera().getPos());
+        if (mc.options.getPerspective() == Perspective.THIRD_PERSON_FRONT) {
             this.yaw += 180.0f;
             this.pitch *= -1.0f;
         }
         this.previousYaw = this.yaw;
         this.previousPitch = this.pitch;
-        this.isMovingForward = this.mc.options.forwardKey.isPressed();
-        this.isMovingBackward = this.mc.options.backKey.isPressed();
-        this.isMovingRight = this.mc.options.rightKey.isPressed();
-        this.isMovingLeft = this.mc.options.leftKey.isPressed();
-        this.isMovingUp = this.mc.options.jumpKey.isPressed();
-        this.isMovingDown = this.mc.options.sneakKey.isPressed();
+        this.isMovingForward = mc.options.forwardKey.isPressed();
+        this.isMovingBackward = mc.options.backKey.isPressed();
+        this.isMovingRight = mc.options.rightKey.isPressed();
+        this.isMovingLeft = mc.options.leftKey.isPressed();
+        this.isMovingUp = mc.options.jumpKey.isPressed();
+        this.isMovingDown = mc.options.sneakKey.isPressed();
         this.resetMovementKeys();
         super.onEnable();
     }
@@ -79,12 +80,12 @@ public final class Freecam extends Module {
     }
 
     private void resetMovementKeys() {
-        this.mc.options.forwardKey.setPressed(false);
-        this.mc.options.backKey.setPressed(false);
-        this.mc.options.rightKey.setPressed(false);
-        this.mc.options.leftKey.setPressed(false);
-        this.mc.options.jumpKey.setPressed(false);
-        this.mc.options.sneakKey.setPressed(false);
+        mc.options.forwardKey.setPressed(false);
+        mc.options.backKey.setPressed(false);
+        mc.options.rightKey.setPressed(false);
+        mc.options.leftKey.setPressed(false);
+        mc.options.jumpKey.setPressed(false);
+        mc.options.sneakKey.setPressed(false);
     }
 
     @EventListener
@@ -100,11 +101,11 @@ public final class Freecam extends Module {
         if (skid.krypton.Krypton.mc.player == null || skid.krypton.Krypton.mc.currentScreen instanceof ChatScreen || skid.krypton.Krypton.mc.currentScreen instanceof SignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof HangingSignEditScreen || skid.krypton.Krypton.mc.currentScreen instanceof AnvilScreen) {
             return;
         }
-        if (this.mc.cameraEntity.isInsideWall()) {
-            this.mc.getCameraEntity().noClip = true;
+        if (mc.cameraEntity.isInsideWall()) {
+            mc.getCameraEntity().noClip = true;
         }
         if (!this.currentPerspective.isFirstPerson()) {
-            this.mc.options.setPerspective(Perspective.FIRST_PERSON);
+            mc.options.setPerspective(Perspective.FIRST_PERSON);
         }
         final Vec3d forwardVector = Vec3d.fromPolar(0.0f, this.yaw);
         final Vec3d rightVector = Vec3d.fromPolar(0.0f, this.yaw + 90.0f);
@@ -112,7 +113,7 @@ public final class Freecam extends Module {
         double yMovement = 0.0;
         double zMovement = 0.0;
         double speedMultiplier = 0.5;
-        if (this.mc.options.sprintKey.isPressed()) {
+        if (mc.options.sprintKey.isPressed()) {
             speedMultiplier = 1.0;
         }
         boolean isMovingHorizontally = false;
@@ -161,24 +162,24 @@ public final class Freecam extends Module {
             return;
         }
         boolean keyHandled = true;
-        if (this.mc.options.forwardKey.matchesKey(keyEvent.key, 0)) {
+        if (mc.options.forwardKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingForward = (keyEvent.mode != 0);
-            this.mc.options.forwardKey.setPressed(false);
-        } else if (this.mc.options.backKey.matchesKey(keyEvent.key, 0)) {
+            mc.options.forwardKey.setPressed(false);
+        } else if (mc.options.backKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingBackward = (keyEvent.mode != 0);
-            this.mc.options.backKey.setPressed(false);
-        } else if (this.mc.options.rightKey.matchesKey(keyEvent.key, 0)) {
+            mc.options.backKey.setPressed(false);
+        } else if (mc.options.rightKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingRight = (keyEvent.mode != 0);
-            this.mc.options.rightKey.setPressed(false);
-        } else if (this.mc.options.leftKey.matchesKey(keyEvent.key, 0)) {
+            mc.options.rightKey.setPressed(false);
+        } else if (mc.options.leftKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingLeft = (keyEvent.mode != 0);
-            this.mc.options.leftKey.setPressed(false);
-        } else if (this.mc.options.jumpKey.matchesKey(keyEvent.key, 0)) {
+            mc.options.leftKey.setPressed(false);
+        } else if (mc.options.jumpKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingUp = (keyEvent.mode != 0);
-            this.mc.options.jumpKey.setPressed(false);
-        } else if (this.mc.options.sneakKey.matchesKey(keyEvent.key, 0)) {
+            mc.options.jumpKey.setPressed(false);
+        } else if (mc.options.sneakKey.matchesKey(keyEvent.key, 0)) {
             this.isMovingDown = (keyEvent.mode != 0);
-            this.mc.options.sneakKey.setPressed(false);
+            mc.options.sneakKey.setPressed(false);
         } else {
             keyHandled = false;
         }
@@ -190,24 +191,24 @@ public final class Freecam extends Module {
     @EventListener
     private void handleMouseButtonEvent(final MouseButtonEvent event) {
         boolean buttonHandled = true;
-        if (this.mc.options.forwardKey.matchesMouse(event.button)) {
+        if (mc.options.forwardKey.matchesMouse(event.button)) {
             this.isMovingForward = (event.actions != 0);
-            this.mc.options.forwardKey.setPressed(false);
-        } else if (this.mc.options.backKey.matchesMouse(event.button)) {
+            mc.options.forwardKey.setPressed(false);
+        } else if (mc.options.backKey.matchesMouse(event.button)) {
             this.isMovingBackward = (event.actions != 0);
-            this.mc.options.backKey.setPressed(false);
-        } else if (this.mc.options.rightKey.matchesMouse(event.button)) {
+            mc.options.backKey.setPressed(false);
+        } else if (mc.options.rightKey.matchesMouse(event.button)) {
             this.isMovingRight = (event.actions != 0);
-            this.mc.options.rightKey.setPressed(false);
-        } else if (this.mc.options.leftKey.matchesMouse(event.button)) {
+            mc.options.rightKey.setPressed(false);
+        } else if (mc.options.leftKey.matchesMouse(event.button)) {
             this.isMovingLeft = (event.actions != 0);
-            this.mc.options.leftKey.setPressed(false);
-        } else if (this.mc.options.jumpKey.matchesMouse(event.button)) {
+            mc.options.leftKey.setPressed(false);
+        } else if (mc.options.jumpKey.matchesMouse(event.button)) {
             this.isMovingUp = (event.actions != 0);
-            this.mc.options.jumpKey.setPressed(false);
-        } else if (this.mc.options.sneakKey.matchesMouse(event.button)) {
+            mc.options.jumpKey.setPressed(false);
+        } else if (mc.options.sneakKey.matchesMouse(event.button)) {
             this.isMovingDown = (event.actions != 0);
-            this.mc.options.sneakKey.setPressed(false);
+            mc.options.sneakKey.setPressed(false);
         } else {
             buttonHandled = false;
         }
@@ -218,7 +219,7 @@ public final class Freecam extends Module {
 
     @EventListener
     private void handleMouseScrolledEvent(final MouseScrolledEvent mouseScrolledEvent) {
-        if (this.mc.currentScreen == null) {
+        if (mc.currentScreen == null) {
             this.movementSpeed += mouseScrolledEvent.amount * 0.25 * this.movementSpeed;
             if (this.movementSpeed < 0.1) {
                 this.movementSpeed = 0.1;

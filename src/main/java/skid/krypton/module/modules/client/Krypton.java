@@ -10,6 +10,7 @@ import skid.krypton.module.Module;
 import skid.krypton.module.setting.BooleanSetting;
 import skid.krypton.module.setting.ModeSetting;
 import skid.krypton.module.setting.NumberSetting;
+import skid.krypton.module.setting.StringSetting;
 import skid.krypton.utils.EncryptedString;
 
 import java.util.Random;
@@ -28,11 +29,12 @@ public final class Krypton extends Module {
     public static final NumberSetting cornerRoundness = new NumberSetting(EncryptedString.of("Roundness"), 1.0, 10.0, 5.0, 1.0);
     public static final ModeSetting<AnimationMode> animationMode = new ModeSetting<>(EncryptedString.of("Animations"), AnimationMode.NORMAL, AnimationMode.class);
     public static final BooleanSetting enableMSAA = new BooleanSetting(EncryptedString.of("MSAA"), true).setDescription(EncryptedString.of("Anti Aliasing | This can impact performance if you're using tracers but gives them a smoother look |"));
+    public static final StringSetting commandPrefix = new StringSetting("Command Prefix", ".");
     public boolean shouldPreventClose;
 
     public Krypton() {
         super(EncryptedString.of("Krypton+"), EncryptedString.of("Settings for the client"), 344, Category.CLIENT);
-        this.addSettings(Krypton.redColor, Krypton.greenColor, Krypton.blueColor, Krypton.windowAlpha, Krypton.renderBackground, this.preventClose, Krypton.cornerRoundness, Krypton.animationMode, Krypton.enableMSAA);
+        this.addSettings(Krypton.redColor, Krypton.greenColor, Krypton.blueColor, Krypton.windowAlpha, Krypton.renderBackground, this.preventClose, Krypton.cornerRoundness, Krypton.animationMode, Krypton.enableMSAA, Krypton.commandPrefix);
     }
 
     @Override

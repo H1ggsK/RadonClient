@@ -1,9 +1,6 @@
 package skid.krypton.manager;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import skid.krypton.Krypton;
@@ -11,12 +8,6 @@ import skid.krypton.module.Module;
 import skid.krypton.module.setting.*;
 import java.io.*;
 
-/**
- * ConfigManager now:
- * 1. Reads from disk on loadProfile()
- * 2. Saves out to disk on shutdown()
- * 3. Fixes NumberSetting loader to call setValue(...)
- */
 public final class ConfigManager {
     private static final File CONFIG_FILE = new File("config/krypton.json");
     private final Gson gson = new Gson();
@@ -24,40 +15,39 @@ public final class ConfigManager {
 
     public void loadProfile() {
         try {
-            // Ensure config directory exists
             CONFIG_FILE.getParentFile().mkdirs();
 
             if (jsonObject == null) {
                 if (CONFIG_FILE.exists()) {
-                    // read existing file
                     try (Reader reader = new FileReader(CONFIG_FILE)) {
                         jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
                     }
                 } else {
-                    // no config on disk yet
                     jsonObject = new JsonObject();
                 }
             }
 
-            // apply values to modules
             for (Module module : Krypton.INSTANCE.getModuleManager().c()) {
-                JsonElement moduleElem = jsonObject.get(module.getName().toString());
-                if (moduleElem == null || !moduleElem.isJsonObject()) continue;
+                try {
+                    JsonElement moduleElem = jsonObject.get(module.getName().toString());
+                    if (moduleElem == null || !moduleElem.isJsonObject()) continue;
 
-                JsonObject modObj = moduleElem.getAsJsonObject();
+                    JsonObject modObj = moduleElem.getAsJsonObject();
 
-                // enabled
-                JsonElement enabledElem = modObj.get("enabled");
-                if (enabledElem != null && enabledElem.isJsonPrimitive() && enabledElem.getAsBoolean()) {
-                    module.toggle(true);
-                }
-
-                // settings
-                for (Setting setting : module.getSettings()) {
-                    JsonElement settingElem = modObj.get(setting.getName().toString());
-                    if (settingElem != null) {
-                        setValueFromJson(setting, settingElem, module);
+                    JsonElement enabledElem = modObj.get("enabled");
+                    if (enabledElem != null && enabledElem.isJsonPrimitive() && enabledElem.getAsBoolean()) {
+                        module.toggle(true);
                     }
+
+                    for (Setting setting : module.getSettings()) {
+                        JsonElement settingElem = modObj.get(setting.getName().toString());
+                        if (settingElem != null) {
+                            setValueFromJson(setting, settingElem, module);
+                        }
+                    }
+                } catch (Exception moduleEx) {
+                    System.err.println("Error loading module '" + module.getName() + "': " + moduleEx.getMessage());
+                    moduleEx.printStackTrace();
                 }
             }
         } catch (Exception ex) {
@@ -75,12 +65,10 @@ public final class ConfigManager {
             } else if (setting instanceof ModeSetting<?> ms) {
                 if (jsonElement.isJsonPrimitive()) {
                     int idx = jsonElement.getAsInt();
-                    if (idx != -1) ms.setModeIndex(idx);
-                    else ms.setModeIndex(ms.getOriginalValue());
+                    ms.setModeIndex(idx != -1 ? idx : ms.getOriginalValue());
                 }
             } else if (setting instanceof NumberSetting ns) {
                 if (jsonElement.isJsonPrimitive()) {
-                    // FIXED: now calling setValue, not getValue
                     ns.setValue(jsonElement.getAsDouble());
                 }
             } else if (setting instanceof BindSetting bind) {
@@ -106,22 +94,27 @@ public final class ConfigManager {
             } else if (setting instanceof ItemSetting is && jsonElement.isJsonPrimitive()) {
                 is.setItem(Registries.ITEM.get(Identifier.of(jsonElement.getAsString())));
             }
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+            System.err.println("Error loading setting '" + setting.getName() + "': " + ignored.getMessage());
+        }
     }
 
     public void shutdown() {
         try {
-            // rebuild the JSON tree
             JsonObject out = new JsonObject();
             for (Module module : Krypton.INSTANCE.getModuleManager().c()) {
-                JsonObject modObj = new JsonObject();
-                modObj.addProperty("enabled", module.isEnabled());
-                for (Setting setting : module.getSettings()) {
-                    save(setting, modObj, module);
+                try {
+                    JsonObject modObj = new JsonObject();
+                    modObj.addProperty("enabled", module.isEnabled());
+                    for (Setting setting : module.getSettings()) {
+                        save(setting, modObj, module);
+                    }
+                    out.add(module.getName().toString(), modObj);
+                } catch (Exception moduleEx) {
+                    System.err.println("Error saving module '" + module.getName() + "': " + moduleEx.getMessage());
+                    moduleEx.printStackTrace();
                 }
-                out.add(module.getName().toString(), modObj);
             }
-            // write to disk
             try (Writer writer = new FileWriter(CONFIG_FILE)) {
                 gson.toJson(out, writer);
             }
@@ -153,7 +146,7 @@ public final class ConfigManager {
                 jsonObject.addProperty(name, Registries.ITEM.getId(is.getItem()).toString());
             }
         } catch (Exception ex) {
-            System.err.println("Error saving setting " + setting.getName() + ": " + ex.getMessage());
+            System.err.println("Error saving setting '" + setting.getName() + "': " + ex.getMessage());
         }
     }
 }

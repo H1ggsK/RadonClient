@@ -16,6 +16,7 @@ public final class NoFall extends Module {
     @EventListener
     private void onSendPacket(PacketSendEvent event) {
         if (mc == null) return;
+        if (mc.player == null) return;
         if (mc.player.getAbilities().creativeMode) return;
 
         if (mc.player.isFallFlying()) return;

@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class HUD
         extends Module {
-    private static final CharSequence watermarkText = EncryptedString.of("Krypton Client");
+    private static final CharSequence watermarkText = EncryptedString.of("Krypton Client (h1ggsk Edition)");
     private static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
     private final BooleanSetting showWatermark = new BooleanSetting(EncryptedString.of("Watermark"), true).setDescription(EncryptedString.of("Shows client name on screen"));
     private final BooleanSetting showInfo = new BooleanSetting(EncryptedString.of("Info"), true).setDescription(EncryptedString.of("Shows system information"));
@@ -58,21 +58,21 @@ public final class HUD
 
     @EventListener
     public void onRender2D(Render2DEvent render2DEvent) {
-        if (this.mc.currentScreen != Krypton.INSTANCE.GUI) {
+        if (mc.currentScreen != Krypton.INSTANCE.GUI) {
             DrawContext drawContext = render2DEvent.context;
-            int n = this.mc.getWindow().getWidth();
-            int n2 = this.mc.getWindow().getHeight();
+            int n = mc.getWindow().getWidth();
+            int n2 = mc.getWindow().getHeight();
             RenderUtils.unscaledProjection();
             if (this.showWatermark.getValue()) {
                 this.renderWatermark(drawContext, n);
             }
-            if (this.showInfo.getValue() && this.mc.player != null) {
+            if (this.showInfo.getValue() && mc.player != null) {
                 this.renderInfo(drawContext);
             }
             if (this.showTime.getValue()) {
                 this.renderTime(drawContext, n);
             }
-            if (this.showCoordinates.getValue() && this.mc.player != null) {
+            if (this.showCoordinates.getValue() && mc.player != null) {
                 this.renderCoordinates(drawContext, n2);
             }
             if (this.showModules.getValue()) {
@@ -92,8 +92,8 @@ public final class HUD
 
     private void renderInfo(DrawContext drawContext) {
         String string = this.getPingInfo();
-        String string2 = "FPS: " + this.mc.getCurrentFps() + " | ";
-        String string3 = this.mc.getCurrentServerEntry() == null ? "Singleplayer" : this.mc.getCurrentServerEntry().address;
+        String string2 = "FPS: " + mc.getCurrentFps() + " | ";
+        String string3 = mc.getCurrentServerEntry() == null ? "Singleplayer" : mc.getCurrentServerEntry().address;
         int n = TextRenderer.getWidth(string2);
         int n2 = TextRenderer.getWidth(string);
         RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 30.0, 5.0f + (float)(n + n2 + TextRenderer.getWidth(string3)) + 9.0f, 50.0, this.cornerRadius.getValue(), 15.0);
@@ -114,21 +114,21 @@ public final class HUD
     }
 
     private void renderCoordinates(DrawContext drawContext, int n) {
-        Object[] objectArray = new Object[]{this.mc.player.getX()};
+        Object[] objectArray = new Object[]{mc.player.getX()};
         String string = String.format("X: %.1f", objectArray);
-        Object[] objectArray2 = new Object[]{this.mc.player.getY()};
+        Object[] objectArray2 = new Object[]{mc.player.getY()};
         String string2 = String.format("Y: %.1f", objectArray2);
-        Object[] objectArray3 = new Object[]{this.mc.player.getZ()};
+        Object[] objectArray3 = new Object[]{mc.player.getZ()};
         String string3 = String.format("Z: %.1f", objectArray3);
         String string4 = "";
-        if (this.mc.world != null) {
-            boolean bl = this.mc.world.getRegistryKey().getValue().getPath().contains("nether");
-            boolean bl2 = this.mc.world.getRegistryKey().getValue().getPath().contains("overworld");
+        if (mc.world != null) {
+            boolean bl = mc.world.getRegistryKey().getValue().getPath().contains("nether");
+            boolean bl2 = mc.world.getRegistryKey().getValue().getPath().contains("overworld");
             if (bl) {
-                Object[] objectArray4 = new Object[]{this.mc.player.getX() * 8.0, this.mc.player.getZ() * 8.0};
+                Object[] objectArray4 = new Object[]{mc.player.getX() * 8.0, mc.player.getZ() * 8.0};
                 string4 = String.format(" [%.1f, %.1f]", objectArray4);
             } else if (bl2) {
-                Object[] objectArray5 = new Object[]{this.mc.player.getX() / 8.0, this.mc.player.getZ() / 8.0};
+                Object[] objectArray5 = new Object[]{mc.player.getX() / 8.0, mc.player.getZ() / 8.0};
                 string4 = String.format(" [%.1f, %.1f]", objectArray5);
             }
         }
@@ -165,7 +165,7 @@ public final class HUD
 
     private String getPingInfo() {
         PlayerListEntry playerListEntry;
-        String string = this.mc != null && this.mc.player != null && this.mc.getNetworkHandler() != null ? ((playerListEntry = this.mc.getNetworkHandler().getPlayerListEntry(this.mc.player.getUuid())) != null ? "Ping: " + playerListEntry.getLatency() + "ms | " : "Ping: " + "N/A | ") : "Ping: " + "N/A | ";
+        String string = mc != null && mc.player != null && mc.getNetworkHandler() != null ? ((playerListEntry = mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid())) != null ? "Ping: " + playerListEntry.getLatency() + "ms | " : "Ping: " + "N/A | ") : "Ping: " + "N/A | ";
         return string;
     }
 

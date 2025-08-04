@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skid.krypton.commands.Commands;
 import skid.krypton.gui.ClickGUI;
 import skid.krypton.manager.ConfigManager;
 import skid.krypton.manager.EventManager;
@@ -43,6 +44,7 @@ public final class Krypton {
             LOG = LoggerFactory.getLogger(Krypton.class);
             rotationFaker = new RotationFaker();
             Krypton.mc = MinecraftClient.getInstance();
+            Commands.init();
         } catch (Throwable _t) {
             _t.printStackTrace(System.err);
         }
