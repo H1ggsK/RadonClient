@@ -37,7 +37,7 @@ public final class AuctionSniper
         extends Module {
     private final ItemSetting snipingItem = new ItemSetting(EncryptedString.of("Sniping Item"), Items.AIR);
     private final StringSetting price = new StringSetting(EncryptedString.of("Price"), "1k");
-    private final ModeSetting<Mode> mode = new ModeSetting(EncryptedString.of("Mode"), Mode.MANUAL, Mode.class).setDescription(EncryptedString.of("Manual is faster but api doesnt require auction gui opened all the time"));
+    private final ModeSetting<Mode> mode = new ModeSetting(EncryptedString.of("Mode"), Mode.MANUAL, Mode.class).setDescription(EncryptedString.of("Manual is faster but API doesn't require auction gui opened all the time"));
     private final StringSetting apiKey = new StringSetting(EncryptedString.of("Api Key"), "").setDescription(EncryptedString.of("You can get it by typing /api in chat"));
     private final NumberSetting refreshDelay = new NumberSetting(EncryptedString.of("Refresh Delay"), 0.0, 100.0, 2.0, 1.0);
     private final NumberSetting buyDelay = new NumberSetting(EncryptedString.of("Buy Delay"), 0.0, 100.0, 2.0, 1.0);

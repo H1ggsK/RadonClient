@@ -19,6 +19,7 @@ public class Commands {
 
         add(new DisconnectCommand());
         add(new PanicCommand());
+        add(new SayCommand());
 
         COMMANDS.sort(Comparator.comparing(Command::getName));
     }

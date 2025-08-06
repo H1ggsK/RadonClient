@@ -60,6 +60,7 @@ public final class ModuleManager {
         this.a(new KeyPearl());
         this.a(new NameProtect());
         this.a(new AutoTPA());
+        this.a(new AutoMap());
         this.a(new RtpBaseFinder());
         this.a(new TunnelBaseFinder());
         this.a(new BoneDropper());
@@ -129,7 +130,6 @@ public final class ModuleManager {
         if (keyEvent.mode == 1 && keyEvent.key == (int) c) {
             keyEvent.cancel();
             ChatScreen chat = new ChatScreen(prefix);
-            mc.setScreen(chat);
             mc.setScreen(chat);
         }
     }
