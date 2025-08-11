@@ -1,0 +1,21 @@
+package com.h1ggsk.radon.event.events;
+
+import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.world.chunk.WorldChunk;
+import com.h1ggsk.radon.event.CancellableEvent;
+
+import static com.h1ggsk.radon.Radon.mc;
+
+public class ChunkDataEvent extends CancellableEvent {
+    public ChunkDataS2CPacket packet;
+    public WorldChunk chunk;
+
+    public ChunkDataEvent(final ChunkDataS2CPacket packet) {
+        this.packet = packet;
+        this.chunk = mc.world.getChunk(packet.getChunkX(), packet.getChunkZ());
+    }
+
+    public WorldChunk chunk() {
+        return chunk;
+    }
+}

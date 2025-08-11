@@ -1,16 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "skid.krypton.mixin",
+  "package": "com.h1ggsk.radon.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ClientConnectionMixin",
+    "PlayerInventoryAccessor",
     "PlayerMoveC2SPacketAccessor"
   ],
   "client": [
-    "BufferRendererAccessor",
+    "BrightnessGetterMixin",
     "CameraMixin",
-    "CapabilityTrackerMixin",
     "ChunkOcclusionDataBuilderMixin",
     "ClientChunkMapAccessor",
     "ClientPlayerEntityMixin",
@@ -41,12 +41,13 @@
     "RarityFilterPlacementModifierAccessor",
     "ScreenMixin",
     "SodiumLightDataAccessMixin",
+    "StartVideoMixin",
     "TextVisitFactoryMixin",
-    "WorldChunkMixin",
-    "WorldRendererMixin"
+    "TitleScreenBackgroundMixin",
+    "WorldChunkMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "krypton-refmap.json"
+  "refmap": "radon-refmap.json"
 }

@@ -1,27 +1,28 @@
 {
   "schemaVersion": 1,
-  "id": "krypton",
-  "version": "1.6.1",
-  "name": "Krypton Client",
+  "id": "radon",
+  "version": "1.0",
+  "name": "Radon Client",
   "description": "Ghost client designed for Donut SMP",
   "icon": "icon.png",
   "authors": [
     "H1ggsK"
   ],
   "contact": {
-    "sources": "https://github.com/H1ggsK/KryptonClient.git",
-    "issues": "https://github.com/H1ggsK/KryptonClient/issues/"
+    "sources": "https://github.com/H1ggsK/RadonClient.git",
+    "issues": "https://github.com/H1ggsK/RadonClient/issues/"
   },
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
     "main": [
-      "skid.krypton.Main"
+      "com.h1ggsk.radon.Main"
     ]
   },
   "depends": {
     "fabricloader": ">=0.15.11",
-    "minecraft": "1.21.1"
+    "minecraft": "1.21.1",
+    "fabric": "*"
   },
   "mixins": [
     "client.mixins.json"

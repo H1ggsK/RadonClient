@@ -1,0 +1,10 @@
+{
+  "intro_music": {
+    "sounds": [
+      {
+        "name": "radon:intro_music",
+        "stream": true
+      }
+    ]
+  }
+}
