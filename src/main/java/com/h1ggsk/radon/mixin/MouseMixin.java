@@ -24,7 +24,7 @@ public abstract class MouseMixin {
     private void onMouseButton(final long window, final int button, final int action, final int mods, final CallbackInfo ci) {
         if (button == GLFW.GLFW_KEY_UNKNOWN) return;
         final MouseButtonEvent event = new MouseButtonEvent(button, window, action);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
 
     }
@@ -32,7 +32,7 @@ public abstract class MouseMixin {
     @Inject(method = {"onMouseScroll"}, at = {@At("HEAD")}, cancellable = true)
     private void onMouseScroll(final long window, final double horizontal, final double vertical, final CallbackInfo ci) {
         final MouseScrolledEvent event = new MouseScrolledEvent(vertical);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 
@@ -40,7 +40,7 @@ public abstract class MouseMixin {
     private void onTick(CallbackInfo ci)
     {
         MouseUpdateEvent event = new MouseUpdateEvent(cursorDeltaX, cursorDeltaY);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         cursorDeltaX = event.getDeltaX();
         cursorDeltaY = event.getDeltaY();
     }

@@ -16,14 +16,14 @@ public class ClientConnectionMixin {
     @Inject(method = {"handlePacket"}, at = {@At("HEAD")}, cancellable = true)
     private static void onPacketReceive(final Packet<?> packet, final PacketListener listener, final CallbackInfo ci) {
         final PacketReceiveEvent event = new PacketReceiveEvent(packet);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 
     @Inject(method = {"send(Lnet/minecraft/network/packet/Packet;)V"}, at = {@At("HEAD")}, cancellable = true)
     private void onPacketSend(final Packet<?> packet, final CallbackInfo ci) {
         final PacketSendEvent event = new PacketSendEvent(packet);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 }

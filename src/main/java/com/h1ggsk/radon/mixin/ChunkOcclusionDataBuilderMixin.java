@@ -14,7 +14,7 @@ public abstract class ChunkOcclusionDataBuilderMixin {
     @Inject(method = {"markClosed"}, at = {@At("HEAD")}, cancellable = true)
     private void onMarkClosed(final BlockPos pos, final CallbackInfo ci) {
         final ChunkMarkClosedEvent event = new ChunkMarkClosedEvent();
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 }

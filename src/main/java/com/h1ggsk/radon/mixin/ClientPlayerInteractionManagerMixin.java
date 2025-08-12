@@ -18,13 +18,13 @@ import com.h1ggsk.radon.manager.EventManager;
 public class ClientPlayerInteractionManagerMixin {
     @Inject(method = {"attackBlock"}, at = {@At("HEAD")})
     private void onAttackBlock(final BlockPos pos, final Direction dir, final CallbackInfoReturnable<Boolean> cir) {
-        EventManager.b(new AttackBlockEvent(pos, dir));
+        EventManager.throwEvent(new AttackBlockEvent(pos, dir));
     }
 
     @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
     private void onInteractItem(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         InteractItemEvent event = InteractItemEvent.get(hand);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.toReturn != null) {
             cir.setReturnValue(event.toReturn);
         }

@@ -29,23 +29,23 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     @Inject(method = {"sendMovementPackets"}, at = {@At("HEAD")})
     private void onSendMovementPackets(final CallbackInfo ci) {
-        EventManager.b(new SendMovementPacketsEvent());
+        EventManager.throwEvent(new SendMovementPacketsEvent());
     }
 
     @Inject(method = {"tick"}, at = {@At("HEAD")})
     private void onPlayerTick(final CallbackInfo ci) {
-        EventManager.b(new StartTickEvent());
+        EventManager.throwEvent(new StartTickEvent());
     }
 
     @Inject(at = @At("HEAD"), method = "sendMovementPackets()V")
     private void onSendMovementPacketsHEAD(CallbackInfo ci)
     {
-        EventManager.b(new PreMotionEvent());
+        EventManager.throwEvent(new PreMotionEvent());
     }
 
     @Inject(at = @At("TAIL"), method = "sendMovementPackets()V")
     private void onSendMovementPacketsTAIL(CallbackInfo ci)
     {
-        EventManager.b(new PostMotionEvent());
+        EventManager.throwEvent(new PostMotionEvent());
     }
 }

@@ -23,7 +23,7 @@ public class KeyboardMixin {
         if (key == GLFW.GLFW_KEY_UNKNOWN) return;
 
         KeyEvent evt = new KeyEvent(key, window, action);
-        EventManager.b(evt);
+        EventManager.throwEvent(evt);
         if (evt.isCancelled()) {
             ci.cancel();
             if (action == GLFW.GLFW_PRESS && mc.currentScreen instanceof ChatScreen) {

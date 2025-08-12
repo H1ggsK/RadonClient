@@ -34,13 +34,13 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = {"onChunkData"}, at = {@At("TAIL")})
     private void onChunkData(final ChunkDataS2CPacket packet, final CallbackInfo ci) {
-        EventManager.b(new ChunkDataEvent(packet));
+        EventManager.throwEvent(new ChunkDataEvent(packet));
     }
 
     @Inject(method = {"onEntitySpawn"}, at = {@At("HEAD")}, cancellable = true)
     private void onEntitySpawn(final EntitySpawnS2CPacket packet, final CallbackInfo ci) {
         final EntitySpawnEvent event = new EntitySpawnEvent(packet);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 
@@ -52,9 +52,9 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onGameJoin", at = @At("TAIL"))
     private void onGameJoinTail(GameJoinS2CPacket packet, CallbackInfo info) {
         if (worldNotNull) {
-            EventManager.b(GameLeftEvent.get());
+            EventManager.throwEvent(GameLeftEvent.get());
         }
-        EventManager.b(GameJoinedEvent.get());
+        EventManager.throwEvent(GameJoinedEvent.get());
     }
 
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)

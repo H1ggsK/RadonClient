@@ -1,4 +1,3 @@
-// File: EventManager.java
 package com.h1ggsk.radon.manager;
 
 import com.h1ggsk.radon.Radon;
@@ -19,11 +18,11 @@ public final class EventManager {
         this.EVENTS = new HashMap<>();
     }
 
-    public void register(final Object o) {
-        final Method[] declaredMethods = o.getClass().getDeclaredMethods();
+    public void register(final Object object) {
+        final Method[] declaredMethods = object.getClass().getDeclaredMethods();
         for (final Method method : declaredMethods) {
             if (method.isAnnotationPresent(EventListener.class) && method.getParameterCount() == 1 && Event.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                this.addListener(o, method, method.getAnnotation(EventListener.class));
+                this.addListener(object, method, method.getAnnotation(EventListener.class));
             }
         }
     }
@@ -45,7 +44,7 @@ public final class EventManager {
         this.EVENTS.clear();
     }
 
-    public void a(final Event event) {
+    public void dispatch(final Event event) {
         List<Listener> listeners = this.EVENTS.get(event.getClass());
         if (listeners == null) return;
 
@@ -67,8 +66,8 @@ public final class EventManager {
         }
     }
 
-    public static void b(final Event evt) {
+    public static void throwEvent(final Event evt) {
         if (Radon.INSTANCE == null || Radon.INSTANCE.getEventBus() == null) return;
-        Radon.INSTANCE.getEventBus().a(evt);
+        Radon.INSTANCE.getEventBus().dispatch(evt);
     }
 }

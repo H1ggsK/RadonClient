@@ -2,6 +2,7 @@ package com.h1ggsk.radon.utils;
 
 import com.h1ggsk.radon.Radon;
 import com.h1ggsk.radon.utils.state.CircleRenderState;
+import com.h1ggsk.radon.utils.state.RoundedOutlineRenderState;
 import com.h1ggsk.radon.utils.state.RoundedQuadRenderState;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
@@ -92,38 +93,12 @@ public final class RenderUtils {
         RenderSystem.disableBlend();
     }
 
-    public static void renderRoundedOutlineInternal(final Matrix4f matrix4f, final float n, final float n2, final float n3, final float n4, final double n5, final double n6, final double n7, final double n8, final double n9, final double n10, final double n11, final double n12, final double n13, final double n14) {
-        final BufferBuilder begin = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        final double[][] array = new double[4][];
-        array[0] = new double[]{n7 - n12, n8 - n12, n12};
-        array[1] = new double[]{n7 - n10, n6 + n10, n10};
-        array[2] = new double[]{n5 + n9, n6 + n9, n9};
-        array[3] = new double[]{n5 + n11, n8 - n11, n11};
-        for (int i = 0; i < 4; ++i) {
-            final double[] array2 = array[i];
-            final double n15 = array2[2];
-            for (double angdeg = i * 90.0; angdeg < 90.0 + i * 90.0; angdeg += 90.0 / n14) {
-                final double radians = Math.toRadians(angdeg);
-                final double sin = Math.sin((float) radians);
-                final double n16 = sin * n15;
-                final double cos = Math.cos((float) radians);
-                final double n17 = cos * n15;
-                begin.vertex(matrix4f, (float) array2[0] + (float) n16, (float) array2[1] + (float) n17, 0.0f).color(n, n2, n3, n4);
-                begin.vertex(matrix4f, (float) (array2[0] + (float) n16 + sin * n13), (float) (array2[1] + (float) n17 + cos * n13), 0.0f).color(n, n2, n3, n4);
-            }
-            final double radians2 = Math.toRadians(90.0 + i * 90.0);
-            final double sin2 = Math.sin((float) radians2);
-            final double n18 = sin2 * n15;
-            final double cos2 = Math.cos((float) radians2);
-            final double n19 = cos2 * n15;
-            begin.vertex(matrix4f, (float) array2[0] + (float) n18, (float) array2[1] + (float) n19, 0.0f).color(n, n2, n3, n4);
-            begin.vertex(matrix4f, (float) (array2[0] + (float) n18 + sin2 * n13), (float) (array2[1] + (float) n19 + cos2 * n13), 0.0f).color(n, n2, n3, n4);
-        }
-        final double[] array3 = array[0];
-        final double n20 = array3[2];
-        begin.vertex(matrix4f, (float) array3[0], (float) array3[1] + (float) n20, 0.0f).color(n, n2, n3, n4);
-        begin.vertex(matrix4f, (float) array3[0], (float) (array3[1] + (float) n20 + n13), 0.0f).color(n, n2, n3, n4);
-        BufferRenderer.drawWithGlobalProgram(begin.end());
+    /**
+     * very broken
+     * FIXME!!!!!
+     */
+    public static void renderRoundedOutline(final DrawContext drawContext, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6, final double n7, final double n8, final double n9, final double n10) {
+        drawContext.state.addSimpleElement(new RoundedOutlineRenderState(drawContext.getMatrices(), drawContext.scissorStack.peekLast(), color, n, n2, n3, n4, n5, n6, n7, n8, n9, n10));
     }
 
     public static void setScissorRegion(final int n, final int n2, final int n3, final int n4) {
@@ -164,15 +139,6 @@ public final class RenderUtils {
         begin.vertex(matrixStack.peek().getPositionMatrix(), n + n3 + 20.0f, n2 - 10.0f, 0.0f);
         BufferRenderer.drawWithGlobalProgram(begin.end());
         RenderSystem.disableBlend();
-    }
-
-    public static void renderRoundedOutline(final DrawContext drawContext, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6, final double n7, final double n8, final double n9, final double n10) {
-        final int rgb = color.getRGB();
-        final Matrix4f positionMatrix = drawContext.getMatrices().peek().getPositionMatrix();
-        setup();
-        RenderSystem.setShader((Supplier) GameRenderer::getPositionColorProgram);
-        renderRoundedOutlineInternal(positionMatrix, (rgb >> 16 & 0xFF) / 255.0f, (rgb >> 8 & 0xFF) / 255.0f, (rgb & 0xFF) / 255.0f, (rgb >> 24 & 0xFF) / 255.0f, n, n2, n3, n4, n5, n6, n7, n8, n9, n10);
-        cleanup();
     }
 
     public static MatrixStack matrixFrom(final double n, final double n2, final double n3) {
@@ -281,7 +247,7 @@ public final class RenderUtils {
         final Matrix3x2fStack matrices = drawContext.getMatrices();
         matrices.pushMatrix();
         matrices.translate((float) n, (float) n2, (float) n4);
-        matrices.scale(n5, n5, 1.0f);
+        matrices.scale(n5, n5);
         drawContext.drawItem(itemStack, 0, 0);
         matrices.popMatrix();
     }

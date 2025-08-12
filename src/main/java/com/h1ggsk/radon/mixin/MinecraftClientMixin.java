@@ -30,26 +30,26 @@ public class MinecraftClientMixin {
     @Inject(method = {"tick"}, at = {@At("HEAD")})
     private void onStartTick(final CallbackInfo ci) {
         if (this.world != null) {
-            EventManager.b(new StartTickEvent());
+            EventManager.throwEvent(new StartTickEvent());
         }
     }
 
     @Inject(method = {"tick"}, at = {@At("RETURN")})
     private void onEndTick(final CallbackInfo ci) {
         if (this.world != null) {
-            EventManager.b(new EndTickEvent());
+            EventManager.throwEvent(new EndTickEvent());
         }
     }
 
     @Inject(method = {"onResolutionChanged"}, at = {@At("HEAD")})
     private void onResolutionChanged(final CallbackInfo ci) {
-        EventManager.b(new ResolutionChangedEvent(this.window));
+        EventManager.throwEvent(new ResolutionChangedEvent(this.window));
     }
 
     @Inject(method = {"doItemUse"}, at = {@At("RETURN")}, cancellable = true)
     private void onItemUseReturn(final CallbackInfo ci) {
         final PostItemUseEvent event = new PostItemUseEvent(this.itemUseCooldown);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
         this.itemUseCooldown = event.cooldown;
     }
@@ -57,7 +57,7 @@ public class MinecraftClientMixin {
     @Inject(method = {"doItemUse"}, at = {@At("HEAD")}, cancellable = true)
     private void onItemUseHead(final CallbackInfo ci) {
         final PreItemUseEvent event = new PreItemUseEvent(this.itemUseCooldown);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
         this.itemUseCooldown = event.cooldown;
     }
@@ -65,21 +65,21 @@ public class MinecraftClientMixin {
     @Inject(method = {"doAttack"}, at = {@At("HEAD")}, cancellable = true)
     private void onAttack(final CallbackInfoReturnable<Boolean> cir) {
         final AttackEvent event = new AttackEvent();
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) cir.setReturnValue(false);
     }
 
     @Inject(method = {"handleBlockBreaking"}, at = {@At("HEAD")}, cancellable = true)
     private void onBlockBreaking(final boolean breaking, final CallbackInfo ci) {
         final BlockBreakingEvent event = new BlockBreakingEvent();
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
     }
 
     @Inject(method = {"setScreen"}, at = {@At("HEAD")}, cancellable = true)
     private void onSetScreen(final Screen screen, final CallbackInfo ci) {
         final SetScreenEvent event = new SetScreenEvent(screen);
-        EventManager.b(event);
+        EventManager.throwEvent(event);
         if (event.isCancelled()) ci.cancel();
 
     }

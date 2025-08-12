@@ -12,7 +12,6 @@ import com.h1ggsk.radon.utils.TextRenderer;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public final class ClickGUI extends Screen {
@@ -173,9 +172,5 @@ public final class ClickGUI extends Screen {
         }
         RenderUtils.renderRoundedQuad(drawContext, this.DESCRIPTION_BG, n - 5, n2 - 5, n + a + 5, n2 + 15, 6.0, 6.0, 6.0, 6.0, 50.0);
         TextRenderer.drawString(charSequence, drawContext, n, n2, Color.WHITE.getRGB());
-    }
-
-    private static byte[] brdaposwnczucua() {
-        return new byte[]{98, 92, 52, 27, 7, 88, 41, 125, 66, 65, 37, 99, 61, 68, 5, 26, 118, 48, 126, 26, 64, 42, 90, 37, 54, 61, 36, 48, 100, 73, 66, 17, 73, 98, 88, 39, 108, 21, 71, 5, 112, 15, 123, 80, 65, 78, 19, 40, 10, 96, 118, 55, 22, 6, 49, 97, 118, 86, 110, 127, 112, 126, 98, 10, 60, 94, 107, 36, 104, 70, 62, 71, 11, 77, 120, 62, 26, 68, 118, 87, 45, 21, 21};
     }
 }

@@ -14,6 +14,6 @@ import com.h1ggsk.radon.manager.EventManager;
 public class InGameHudMixin {
     @Inject(method = {"render"}, at = {@At("HEAD")})
     private void onRenderHud(final DrawContext ctx, final RenderTickCounter rtc, final CallbackInfo ci) {
-        EventManager.b(new Render2DEvent(ctx, rtc.getTickProgress(true)));
+        EventManager.throwEvent(new Render2DEvent(ctx, rtc.getTickProgress(true)));
     }
 }

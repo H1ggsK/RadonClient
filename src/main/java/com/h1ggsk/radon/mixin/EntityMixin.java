@@ -17,12 +17,12 @@ import com.h1ggsk.radon.module.modules.misc.Freecam;
 public class EntityMixin {
     @Inject(method = {"getTargetingMargin"}, at = {@At("HEAD")}, cancellable = true)
     private void onSendMovementPackets(final CallbackInfoReturnable<Float> cir) {
-        EventManager.b(new TargetMarginEvent(Entity.class.cast(this), cir));
+        EventManager.throwEvent(new TargetMarginEvent(Entity.class.cast(this), cir));
     }
 
     @Inject(method = {"getPose"}, at = {@At("HEAD")}, cancellable = true)
     private void onGetPose(final CallbackInfoReturnable<EntityPose> cir) {
-        EventManager.b(new TargetPoseEvent(Entity.class.cast(this), cir));
+        EventManager.throwEvent(new TargetPoseEvent(Entity.class.cast(this), cir));
     }
 
     @Inject(method = {"changeLookDirection"}, at = {@At("HEAD")}, cancellable = true)
