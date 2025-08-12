@@ -54,7 +54,7 @@ public record CircleRenderState(Matrix3x2f matrices, ScreenRect scissorArea, Scr
                     matrices,
                     (float) (centerX + Math.sin(radians) * radius),
                     (float) (centerY + Math.cos(radians) * radius),
-                    0
+                    depth
             ).color(
                     (rgb >> 16 & 0xFF) / 255.0f,
                     (rgb >> 8 & 0xFF) / 255.0f,
