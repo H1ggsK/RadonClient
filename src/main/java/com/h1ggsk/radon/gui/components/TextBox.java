@@ -63,8 +63,8 @@ public final class TextBox extends Component {
         final int n6 = n4 + TextRenderer.getWidth(this.setting.getName() + ": ") + 5;
         final int n7 = this.parentWidth() - n6 + this.parentX() - 5;
         final int n8 = n5 - 2;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.INPUT_BORDER, n6, n8, n6 + n7, n8 + 18, 4.0, 4.0, 4.0, 4.0, 50.0);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.INPUT_BG, n6 + 1, n8 + 1, n6 + n7 - 1, n8 + 18 - 1, 3.5, 3.5, 3.5, 3.5, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.INPUT_BORDER, n6, n8, n6 + n7, n8 + 18, 4.0, 4.0, 4.0, 4.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.INPUT_BG, n6 + 1, n8 + 1, n6 + n7 - 1, n8 + 18 - 1, 3.5, 3.5, 3.5, 3.5, 50.0);
         TextRenderer.drawString(this.formatDisplayValue(this.setting.getValue()), drawContext, n6 + 4, n8 + 3, this.VALUE_COLOR.getRGB());
     }
 

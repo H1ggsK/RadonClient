@@ -69,7 +69,7 @@ public final class ModeBox extends Component {
         final int n4 = this.parentY() + this.offset + this.parentOffset() + 25;
         final int n5 = this.parentX() + 5;
         final int n6 = this.parentWidth() - 10;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.SELECTOR_BG, n5, n4, n5 + n6, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.SELECTOR_BG, n5, n4, n5 + n6, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         final int n7 = index - 1;
         float n8 = (float) n7;
         if (n7 < 0.0f) {
@@ -89,7 +89,7 @@ public final class ModeBox extends Component {
         } else {
             n12 = n5 + index * (float) n11;
         }
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.currentColor, n12, n4, n12 + n11, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.currentColor, n12, n4, n12 + n11, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         final int n13 = this.parentY() + this.parentOffset() + this.offset + 9;
         final int parentX = this.parentX();
         final int parentX2 = this.parentX();

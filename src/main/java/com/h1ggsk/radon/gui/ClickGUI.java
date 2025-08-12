@@ -104,9 +104,8 @@ public final class ClickGUI extends Screen {
     }
 
     public boolean keyPressed(final int n, final int n2, final int n3) {
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().keyPressed(n, n2, n3);
+        for (CategoryWindow window : this.windows) {
+            window.keyPressed(n, n2, n3);
         }
         return super.keyPressed(n, n2, n3);
     }
@@ -114,9 +113,8 @@ public final class ClickGUI extends Screen {
     public boolean mouseClicked(final double n, final double n2, final int n3) {
         final double n4 = n * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
         final double n5 = n2 * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().mouseClicked(n4, n5, n3);
+        for (CategoryWindow window : this.windows) {
+            window.mouseClicked(n4, n5, n3);
         }
         return super.mouseClicked(n4, n5, n3);
     }
@@ -124,18 +122,16 @@ public final class ClickGUI extends Screen {
     public boolean mouseDragged(final double n, final double n2, final int n3, final double n4, final double n5) {
         final double n6 = n * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
         final double n7 = n2 * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().mouseDragged(n6, n7, n3, n4, n5);
+        for (CategoryWindow window : this.windows) {
+            window.mouseDragged(n6, n7, n3, n4, n5);
         }
         return super.mouseDragged(n6, n7, n3, n4, n5);
     }
 
     public boolean mouseScrolled(final double n, final double n2, final double n3, final double n4) {
         final double n5 = n2 * MinecraftClient.getInstance().getWindow().getScaleFactor();
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().mouseScrolled(n, n5, n3, n4);
+        for (CategoryWindow window : this.windows) {
+            window.mouseScrolled(n, n5, n3, n4);
         }
         return super.mouseScrolled(n, n5, n3, n4);
     }
@@ -152,24 +148,22 @@ public final class ClickGUI extends Screen {
     public void onGuiClose() {
         Radon.mc.setScreenAndRender(Radon.INSTANCE.screen);
         this.currentColor = null;
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().onGuiClose();
+        for (CategoryWindow window : this.windows) {
+            window.onGuiClose();
         }
     }
 
     public boolean mouseReleased(final double n, final double n2, final int n3) {
         final double n4 = n * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
         final double n5 = n2 * (int) MinecraftClient.getInstance().getWindow().getScaleFactor();
-        final Iterator<CategoryWindow> iterator = this.windows.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().mouseReleased(n4, n5, n3);
+        for (CategoryWindow window : this.windows) {
+            window.mouseReleased(n4, n5, n3);
         }
         return super.mouseReleased(n4, n5, n3);
     }
 
     private void renderTooltip(final DrawContext drawContext, final CharSequence charSequence, int n, final int n2) {
-        if (charSequence == null || charSequence.length() == 0) {
+        if (charSequence == null || charSequence.isEmpty()) {
             return;
         }
         final int a = TextRenderer.getWidth(charSequence);
@@ -177,11 +171,8 @@ public final class ClickGUI extends Screen {
         if (n + a + 10 > framebufferWidth) {
             n = framebufferWidth - a - 10;
         }
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.DESCRIPTION_BG, n - 5, n2 - 5, n + a + 5, n2 + 15, 6.0, 6.0, 6.0, 6.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.DESCRIPTION_BG, n - 5, n2 - 5, n + a + 5, n2 + 15, 6.0, 6.0, 6.0, 6.0, 50.0);
         TextRenderer.drawString(charSequence, drawContext, n, n2, Color.WHITE.getRGB());
-    }
-
-    static {
     }
 
     private static byte[] brdaposwnczucua() {

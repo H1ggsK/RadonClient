@@ -76,15 +76,15 @@ public final class Checkbox extends Component {
         final int n = this.parentX() + 8;
         final int n2 = this.parentY() + this.parentOffset() + this.offset + this.parentHeight() / 2 - 6;
         final Color mainColor = Utils.getMainColor(255, this.parent.settings.indexOf(this));
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.BOX_BORDER, n, n2, n + 13, n2 + 13, 3.0, 3.0, 3.0, 3.0, 50.0);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.BOX_BG, n + 1, n2 + 1, n + 13 - 1, n2 + 13 - 1, 2.5, 2.5, 2.5, 2.5, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.BOX_BORDER, n, n2, n + 13, n2 + 13, 3.0, 3.0, 3.0, 3.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.BOX_BG, n + 1, n2 + 1, n + 13 - 1, n2 + 13 - 1, 2.5, 2.5, 2.5, 2.5, 50.0);
         if (this.enabledAnimation > 0.01f) {
             final Color color = new Color(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), (int) (255.0f * this.enabledAnimation));
             final float n3 = n + 2 + 9.0f * (1.0f - this.enabledAnimation) / 2.0f;
             final float n4 = n2 + 2 + 9.0f * (1.0f - this.enabledAnimation) / 2.0f;
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), color, n3, n4, n3 + 9.0f * this.enabledAnimation, n4 + 9.0f * this.enabledAnimation, 1.5, 1.5, 1.5, 1.5, 50.0);
+            RenderUtils.renderRoundedQuad(drawContext, color, n3, n4, n3 + 9.0f * this.enabledAnimation, n4 + 9.0f * this.enabledAnimation, 1.5, 1.5, 1.5, 1.5, 50.0);
             if (this.enabledAnimation > 0.7f) {
-                RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), (int) (40.0f * ((this.enabledAnimation - 0.7f) * 3.33f))), n - 1, n2 - 1, n + 13 + 1, n2 + 13 + 1, 3.5, 3.5, 3.5, 3.5, 50.0);
+                RenderUtils.renderRoundedQuad(drawContext, new Color(mainColor.getRed(), mainColor.getGreen(), mainColor.getBlue(), (int) (40.0f * ((this.enabledAnimation - 0.7f) * 3.33f))), n - 1, n2 - 1, n + 13 + 1, n2 + 13 + 1, 3.5, 3.5, 3.5, 3.5, 50.0);
             }
         }
     }

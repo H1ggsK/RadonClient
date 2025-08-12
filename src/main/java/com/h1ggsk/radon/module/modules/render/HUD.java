@@ -33,7 +33,7 @@ public final class HUD extends Module {
     private final BooleanSetting showCoordinates = new BooleanSetting("Coordinates", true).setDescription(EncryptedString.of("Shows player coordinates"));
     private final NumberSetting opacity = new NumberSetting("Opacity", 0.0, 1.0, 0.8, 0.05).getValue(EncryptedString.of("Controls the opacity of HUD elements"));
     private final NumberSetting cornerRadius = new NumberSetting("Corner Radius", 0.0, 10.0, 5.0, 0.5).getValue(EncryptedString.of("Controls the roundness of corners"));
-    private final ModeSetting<ModuleListSorting> moduleSortingMode = new ModeSetting("Sort Mode", ModuleListSorting.LENGTH, ModuleListSorting.class).setDescription(EncryptedString.of("How to sort the module list"));
+    private final ModeSetting<ModuleListSorting> moduleSortingMode = new ModeSetting<>("Sort Mode", ModuleListSorting.LENGTH, ModuleListSorting.class).setDescription(EncryptedString.of("How to sort the module list"));
     private final BooleanSetting enableRainbowEffect = new BooleanSetting("Rainbow", false).setDescription(EncryptedString.of("Enables rainbow coloring effect"));
     private final NumberSetting rainbowSpeed = new NumberSetting("Rainbow Speed", 0.1, 10.0, 2.0, 0.1).getValue(EncryptedString.of("Controls the speed of the rainbow effect"));
     private final Color primaryColor = new Color(65, 185, 255, 255);
@@ -83,10 +83,9 @@ public final class HUD extends Module {
 
     private void renderWatermark(DrawContext drawContext, int n) {
         int n2 = TextRenderer.getWidth(watermarkText);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 5.0, 5.0f + (float)n2 + 7.0f, 25.0, this.cornerRadius.getValue(), 15.0);
+        RenderUtils.renderRoundedQuad(drawContext, new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 5.0, 5.0f + (float)n2 + 7.0f, 25.0, this.cornerRadius.getValue(), 15.0);
         Color color = this.enableRainbowEffect.getValue() ? ColorUtil.a(this.rainbowSpeed.getIntValue(), 1) : this.primaryColor;
-        CharSequence charSequence = watermarkText;
-        TextRenderer.drawString(charSequence, drawContext, 8, 8, color.getRGB());
+        TextRenderer.drawString(watermarkText, drawContext, 8, 8, color.getRGB());
     }
 
     private void renderInfo(DrawContext drawContext) {
@@ -95,7 +94,7 @@ public final class HUD extends Module {
         String string3 = mc.getCurrentServerEntry() == null ? "Singleplayer" : mc.getCurrentServerEntry().address;
         int n = TextRenderer.getWidth(string2);
         int n2 = TextRenderer.getWidth(string);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 30.0, 5.0f + (float)(n + n2 + TextRenderer.getWidth(string3)) + 9.0f, 50.0, this.cornerRadius.getValue(), 15.0);
+        RenderUtils.renderRoundedQuad(drawContext, new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, 30.0, 5.0f + (float)(n + n2 + TextRenderer.getWidth(string3)) + 9.0f, 50.0, this.cornerRadius.getValue(), 15.0);
         TextRenderer.drawString(string2, drawContext, 10, 33, this.primaryColor.getRGB());
         int n3 = 10 + TextRenderer.getWidth(string2);
         TextRenderer.drawString(string, drawContext, n3, 33, this.secondaryColor.getRGB());
@@ -103,11 +102,10 @@ public final class HUD extends Module {
     }
 
     private void renderTime(DrawContext drawContext, int n) {
-        SimpleDateFormat simpleDateFormat = timeFormatter;
-        String string = simpleDateFormat.format(new Date());
+        String string = timeFormatter.format(new Date());
         int n2 = TextRenderer.getWidth(string);
         int n3 = n / 2;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), (float)n3 - (float)n2 / 2.0f - 3.0f, 5.0, (float)n3 + (float)n2 / 2.0f + 5.0f, 25.0, this.cornerRadius.getValue(), 15.0);
+        RenderUtils.renderRoundedQuad(drawContext, new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), (float)n3 - (float)n2 / 2.0f - 3.0f, 5.0, (float)n3 + (float)n2 / 2.0f + 5.0f, 25.0, this.cornerRadius.getValue(), 15.0);
         int n4 = this.enableRainbowEffect.getValue() ? ColorUtil.a(this.rainbowSpeed.getIntValue(), 1).getRGB() : this.primaryColor.getRGB();
         TextRenderer.drawString(string, drawContext, (int)((float)n3 - (float)n2 / 2.0f), 8, n4);
     }
@@ -133,18 +131,18 @@ public final class HUD extends Module {
         }
         String string5 = string + " | " + string2 + " | " + string3 + string4;
         int n2 = TextRenderer.getWidth(string5);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, n - 25, 5.0f + (float)n2 + 5.0f, n - 5, this.cornerRadius.getValue(), 15.0);
+        RenderUtils.renderRoundedQuad(drawContext, new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), 5.0, n - 25, 5.0f + (float)n2 + 5.0f, n - 5, this.cornerRadius.getValue(), 15.0);
         TextRenderer.drawString(string5, drawContext, 10, n - 22, this.primaryColor.getRGB());
     }
 
     private void renderModuleList(DrawContext drawContext, int n, int n2) {
-        List list = this.getSortedModules();
+        List<Module> list = this.getSortedModules();
         int n3 = 5;
-        for (Object e : list) {
-            String string = ((Module)e).getName().toString();
+        for (Module e : list) {
+            String string = e.getName().toString();
             int n4 = TextRenderer.getWidth(string);
             int n5 = n - 5;
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), (float)n - (float)n4 - 13.0f, n3, n5, n3 + 20, this.cornerRadius.getValue(), 15.0);
+            RenderUtils.renderRoundedQuad(drawContext, new Color(35, 35, 35, (int)(this.opacity.getFloatValue() * 255.0f)), (float)n - (float)n4 - 13.0f, n3, n5, n3 + 20, this.cornerRadius.getValue(), 15.0);
             Color color = this.enableRainbowEffect.getValue() ? ColorUtil.a(this.rainbowSpeed.getIntValue() + list.indexOf(e), 1) : this.blendColors(this.primaryColor, this.secondaryColor, (float)list.indexOf(e) / (float)list.size());
             drawContext.fill((int)((float)n5) - 2, n3, (int)((float)n5), n3 + 20, color.getRGB());
             TextRenderer.drawString(string, drawContext, (int)((float)n - (float)n4 - 10.0f), n3 + 3, color.getRGB());
@@ -164,8 +162,7 @@ public final class HUD extends Module {
 
     private String getPingInfo() {
         PlayerListEntry playerListEntry;
-        String string = mc != null && mc.player != null && mc.getNetworkHandler() != null ? ((playerListEntry = mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid())) != null ? "Ping: " + playerListEntry.getLatency() + "ms | " : "Ping: " + "N/A | ") : "Ping: " + "N/A | ";
-        return string;
+        return mc != null && mc.player != null && mc.getNetworkHandler() != null ? ((playerListEntry = mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid())) != null ? "Ping: " + playerListEntry.getLatency() + "ms | " : "Ping: " + "N/A | ") : "Ping: " + "N/A | ";
     }
 
     private Color blendColors(Color color, Color color2, float f) {

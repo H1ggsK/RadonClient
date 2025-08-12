@@ -77,7 +77,7 @@ public final class ElytraSwap extends Module {
             Predicate<Item> predicate;
 
             if (mc.player.getEquippedStack(EquipmentSlot.CHEST).isOf(Items.ELYTRA)) {
-                predicate = (item -> item .getDefaultStack().isIn(ConventionalItemTags.ARMORS) && item.getDefaultStack().isIn(ItemTags.CHEST_ARMOR));
+                predicate = (item -> item.getDefaultStack().isIn(ConventionalItemTags.ARMORS) && item.getDefaultStack().isIn(ItemTags.CHEST_ARMOR));
             } else {
                 predicate = (item2 -> item2.equals(Items.ELYTRA));
             }

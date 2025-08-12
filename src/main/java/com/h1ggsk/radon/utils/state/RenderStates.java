@@ -8,5 +8,6 @@ public class RenderStates {
      */
     public static void init() {
         CircleRenderState.init();
+        RoundedQuadRenderState.init();
     }
 }

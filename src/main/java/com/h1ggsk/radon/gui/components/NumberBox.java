@@ -63,9 +63,9 @@ public final class NumberBox extends Component {
         }
         final int n4 = this.parentY() + this.offset + this.parentOffset() + 25;
         final int n5 = this.parentX() + 5;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.TRACK_BG_COLOR, n5, n4, n5 + (this.parentWidth() - 10), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.TRACK_BG_COLOR, n5, n4, n5 + (this.parentWidth() - 10), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         if (this.lerpedOffsetX > 2.5) {
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.currentColor1, n5, n4, n5 + Math.max(this.lerpedOffsetX - 5.0, 0.0), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+            RenderUtils.renderRoundedQuad(drawContext, this.currentColor1, n5, n4, n5 + Math.max(this.lerpedOffsetX - 5.0, 0.0), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         }
         final String displayValue = this.getDisplayValue();
         TextRenderer.drawString(this.setting.getName(), drawContext, this.parentX() + 5, this.parentY() + this.parentOffset() + this.offset + 9, this.TEXT_COLOR.getRGB());

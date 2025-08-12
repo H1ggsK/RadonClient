@@ -64,7 +64,7 @@ public final class CategoryWindow {
         final Color a = ColorUtil.a(new Color(25, 25, 30, this.currentColor.getAlpha()), new Color(255, 255, 255, 20), this.hoverAnimation);
         float n5 = this.extended ? 0.0F : 6.0F;
         float n6 = this.extended ? 0.0F : 6.0F;
-        RenderUtils.renderRoundedQuad(context.getMatrices(), a, this.prevX, this.prevY, this.prevX + this.width, this.prevY + this.height, 6.0, 6.0, n5, n6, 50.0);
+        RenderUtils.renderRoundedQuad(context, a, this.prevX, this.prevY, this.prevX + this.width, this.prevY + this.height, 6.0, 6.0, n5, n6, 50.0);
         final Color mainColor = Utils.getMainColor(255, this.category.ordinal());
         final CharSequence f = this.category.name;
         final int n7 = this.prevX + (this.width - TextRenderer.getWidth(this.category.name)) / 2;

@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(value = EnvType.CLIENT)
-@Mixin(TitleScreen.class)
-public class TitleScreenBackgroundMixin {
+@Mixin(Screen.class)
+public class ScreenBackgroundMixin {
 
     @Unique
     private static final int FRAME_COUNT = 3;
@@ -27,8 +27,8 @@ public class TitleScreenBackgroundMixin {
     @Unique
     private static int currentFrame = 1;
 
-    @Inject(method = "renderBackground", at = @At("HEAD"), cancellable = true)
-    private void renderCustomBackground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "renderPanoramaBackground", at = @At("HEAD"), cancellable = true)
+    private void renderCustomBackground(DrawContext context, float deltaTicks, CallbackInfo ci) {
         if (Radon.showIntro.getValue()) {
             MinecraftClient client = MinecraftClient.getInstance();
             long currentTime = System.currentTimeMillis();

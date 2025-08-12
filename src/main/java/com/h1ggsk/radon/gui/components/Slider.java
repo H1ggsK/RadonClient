@@ -45,7 +45,6 @@ public final class Slider extends Component {
     @Override
     public void render(final DrawContext drawContext, final int n, final int n2, final float n3) {
         super.render(drawContext, n, n2, n3);
-        final MatrixStack matrices = drawContext.getMatrices();
         this.updateAnimations(n, n2, n3);
         this.offsetMinX = (this.setting.getCurrentMin() - this.setting.getMinValue()) / (this.setting.getMaxValue() - this.setting.getMinValue()) * (this.parentWidth() - 10) + 5.0;
         this.offsetMaxX = (this.setting.getCurrentMax() - this.setting.getMinValue()) / (this.setting.getMaxValue() - this.setting.getMinValue()) * (this.parentWidth() - 10) + 5.0;
@@ -56,16 +55,16 @@ public final class Slider extends Component {
         }
         final int n4 = this.parentY() + this.offset + this.parentOffset() + 25;
         final int n5 = this.parentX() + 5;
-        RenderUtils.renderRoundedQuad(matrices, Slider.TRACK_BG_COLOR, n5, n4, n5 + (this.parentWidth() - 10), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, Slider.TRACK_BG_COLOR, n5, n4, n5 + (this.parentWidth() - 10), n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         if (this.lerpedOffsetMaxX > this.lerpedOffsetMinX) {
-            RenderUtils.renderRoundedQuad(matrices, this.accentColor1, n5 + this.lerpedOffsetMinX - 5.0, n4, n5 + this.lerpedOffsetMaxX - 5.0, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
+            RenderUtils.renderRoundedQuad(drawContext, this.accentColor1, n5 + this.lerpedOffsetMinX - 5.0, n4, n5 + this.lerpedOffsetMaxX - 5.0, n4 + 4.0f, 2.0, 2.0, 2.0, 2.0, 50.0);
         }
         final String displayText = this.getDisplayText();
         TextRenderer.drawString(this.setting.getName(), drawContext, this.parentX() + 5, this.parentY() + this.parentOffset() + this.offset + 9, Slider.TEXT_COLOR.getRGB());
         TextRenderer.drawString(displayText, drawContext, this.parentX() + this.parentWidth() - TextRenderer.getWidth(displayText) - 5, this.parentY() + this.parentOffset() + this.offset + 9, this.accentColor1.getRGB());
         final float n6 = n4 + 2.0f - 4.0f;
-        RenderUtils.renderRoundedQuad(matrices, Slider.THUMB_COLOR, (float) (n5 + this.lerpedOffsetMinX - 5.0 - 4.0), n6, (float) (n5 + this.lerpedOffsetMinX - 5.0 + 4.0), n6 + 8.0f, 4.0, 4.0, 4.0, 4.0, 50.0);
-        RenderUtils.renderRoundedQuad(matrices, Slider.THUMB_COLOR, (float) (n5 + this.lerpedOffsetMaxX - 5.0 - 4.0), n6, (float) (n5 + this.lerpedOffsetMaxX - 5.0 + 4.0), n6 + 8.0f, 4.0, 4.0, 4.0, 4.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, Slider.THUMB_COLOR, (float) (n5 + this.lerpedOffsetMinX - 5.0 - 4.0), n6, (float) (n5 + this.lerpedOffsetMinX - 5.0 + 4.0), n6 + 8.0f, 4.0, 4.0, 4.0, 4.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, Slider.THUMB_COLOR, (float) (n5 + this.lerpedOffsetMaxX - 5.0 - 4.0), n6, (float) (n5 + this.lerpedOffsetMaxX - 5.0 + 4.0), n6 + 8.0f, 4.0, 4.0, 4.0, 4.0, 50.0);
     }
 
     private void updateAnimations(final int n, final int n2, final float n3) {

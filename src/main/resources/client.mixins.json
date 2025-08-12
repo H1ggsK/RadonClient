@@ -45,7 +45,7 @@
     "SodiumLightDataAccessMixin",
     "StartVideoMixin",
     "TextVisitFactoryMixin",
-    "TitleScreenBackgroundMixin",
+    "ScreenBackgroundMixin",
     "WorldChunkMixin"
   ],
   "injectors": {

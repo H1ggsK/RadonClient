@@ -37,7 +37,6 @@ public final class Keybind extends Component {
     @Override
     public void render(final DrawContext drawContext, final int n, final int n2, final float n3) {
         super.render(drawContext, n, n2, n3);
-        final MatrixStack matrices = drawContext.getMatrices();
         this.updateAnimations(n, n2, n3);
         if (!this.parent.parent.dragging) {
             drawContext.fill(this.parentX(), this.parentY() + this.parentOffset() + this.offset, this.parentX() + this.parentWidth(), this.parentY() + this.parentOffset() + this.offset + this.parentHeight(), new Color(Keybind.HOVER_COLOR.getRed(), Keybind.HOVER_COLOR.getGreen(), Keybind.HOVER_COLOR.getBlue(), (int) (Keybind.HOVER_COLOR.getAlpha() * this.hoverAnimation)).getRGB());
@@ -53,7 +52,7 @@ public final class Keybind extends Component {
         final int max = Math.max(80, a + 16);
         final int n4 = this.parentX() + this.parentWidth() - max - 5;
         final int n5 = this.parentY() + this.parentOffset() + this.offset + (this.parentHeight() - 20) / 2;
-        RenderUtils.renderRoundedQuad(matrices, ColorUtil.a(Keybind.BUTTON_BG_COLOR, Keybind.BUTTON_ACTIVE_BG_COLOR, this.listenAnimation), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, ColorUtil.a(Keybind.BUTTON_BG_COLOR, Keybind.BUTTON_ACTIVE_BG_COLOR, this.listenAnimation), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
         final float a2 = this.listenAnimation * 0.7f;
         float b;
         if (this.isButtonHovered(n, n2, n4, n5, max, 20)) {
@@ -63,11 +62,11 @@ public final class Keybind extends Component {
         }
         final float max2 = Math.max(a2, b);
         if (max2 > 0.0f) {
-            RenderUtils.renderRoundedQuad(matrices, new Color(this.accentColor.getRed(), this.accentColor.getGreen(), this.accentColor.getBlue(), (int) (this.accentColor.getAlpha() * max2)), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
+            RenderUtils.renderRoundedQuad(drawContext, new Color(this.accentColor.getRed(), this.accentColor.getGreen(), this.accentColor.getBlue(), (int) (this.accentColor.getAlpha() * max2)), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
         }
         TextRenderer.drawString(string, drawContext, n4 + (max - a) / 2, n5 + 6 - 3, ColorUtil.a(Keybind.TEXT_COLOR, Keybind.LISTENING_TEXT_COLOR, this.listenAnimation).getRGB());
         if (this.keybind.isListening()) {
-            RenderUtils.renderRoundedQuad(matrices, new Color(this.accentColor.getRed(), this.accentColor.getGreen(), this.accentColor.getBlue(), (int) (this.accentColor.getAlpha() * ((float) Math.abs(Math.sin(System.currentTimeMillis() / 500.0)) * 0.3f))), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
+            RenderUtils.renderRoundedQuad(drawContext, new Color(this.accentColor.getRed(), this.accentColor.getGreen(), this.accentColor.getBlue(), (int) (this.accentColor.getAlpha() * ((float) Math.abs(Math.sin(System.currentTimeMillis() / 500.0)) * 0.3f))), n4, n5, n4 + max, n5 + 20, 4.0, 4.0, 4.0, 4.0, 50.0);
         }
     }
 

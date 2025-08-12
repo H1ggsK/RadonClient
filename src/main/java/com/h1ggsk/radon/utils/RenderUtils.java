@@ -2,6 +2,7 @@ package com.h1ggsk.radon.utils;
 
 import com.h1ggsk.radon.Radon;
 import com.h1ggsk.radon.utils.state.CircleRenderState;
+import com.h1ggsk.radon.utils.state.RoundedQuadRenderState;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -68,15 +69,17 @@ public final class RenderUtils {
         RenderUtils.rendering3D = true;
     }
 
-    public static void renderRoundedQuad(final MatrixStack matrixStack, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6, final double n7, final double n8, final double n9) {
-        final int rgb = color.getRGB();
-        final Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShader((Supplier) GameRenderer::getPositionColorProgram);
-        renderRoundedQuadInternal(positionMatrix, (rgb >> 16 & 0xFF) / 255.0f, (rgb >> 8 & 0xFF) / 255.0f, (rgb & 0xFF) / 255.0f, (rgb >> 24 & 0xFF) / 255.0f, n, n2, n3, n4, n5, n6, n7, n8, n9);
-        RenderSystem.enableCull();
-        RenderSystem.disableBlend();
+    public static void renderRoundedQuad(final DrawContext context, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6, final double n7, final double n8, final double n9) {
+        context.state.addSimpleElement(new RoundedQuadRenderState(
+                context.getMatrices(),
+                context.scissorStack.peekLast(),
+                color,
+                n, n2, n3, n4, n5, n6, n7, n8, n9
+        ));
+    }
+
+    public static void renderRoundedQuad(final DrawContext context, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6) {
+        renderRoundedQuad(context, color, n, n2, n3, n4, n5, n5, n5, n5, n6);
     }
 
     private static void setup() {
@@ -87,10 +90,6 @@ public final class RenderUtils {
     private static void cleanup() {
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
-    }
-
-    public static void renderRoundedQuad(final MatrixStack matrixStack, final Color color, final double n, final double n2, final double n3, final double n4, final double n5, final double n6) {
-        renderRoundedQuad(matrixStack, color, n, n2, n3, n4, n5, n5, n5, n5, n6);
     }
 
     public static void renderRoundedOutlineInternal(final Matrix4f matrix4f, final float n, final float n2, final float n3, final float n4, final double n5, final double n6, final double n7, final double n8, final double n9, final double n10, final double n11, final double n12, final double n13, final double n14) {
@@ -204,26 +203,6 @@ public final class RenderUtils {
         BufferRenderer.drawWithGlobalProgram(begin.end());
         RenderSystem.disableBlend();
         matrixStack.pop();
-    }
-
-    public static void renderRoundedQuadInternal(final Matrix4f matrix4f, final float n, final float n2, final float n3, final float n4, final double n5, final double n6, final double n7, final double n8, final double n9, final double n10, final double n11, final double n12, final double n13) {
-        final BufferBuilder begin = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
-        final double[][] array = new double[4][];
-        array[0] = new double[]{n7 - n12, n8 - n12, n12};
-        array[1] = new double[]{n7 - n10, n6 + n10, n10};
-        array[2] = new double[]{n5 + n9, n6 + n9, n9};
-        array[3] = new double[]{n5 + n11, n8 - n11, n11};
-        for (int i = 0; i < 4; ++i) {
-            final double[] array2 = array[i];
-            final double n14 = array2[2];
-            for (double angdeg = i * 90.0; angdeg < 90.0 + i * 90.0; angdeg += 90.0 / n13) {
-                final double radians = Math.toRadians(angdeg);
-                begin.vertex(matrix4f, (float) array2[0] + (float) (Math.sin((float) radians) * n14), (float) array2[1] + (float) (Math.cos((float) radians) * n14), 0.0f).color(n, n2, n3, n4);
-            }
-            final double radians2 = Math.toRadians(90.0 + i * 90.0);
-            begin.vertex(matrix4f, (float) array2[0] + (float) (Math.sin((float) radians2) * n14), (float) array2[1] + (float) (Math.cos((float) radians2) * n14), 0.0f).color(n, n2, n3, n4);
-        }
-        BufferRenderer.drawWithGlobalProgram(begin.end());
     }
 
     public static void renderFilledBox(final MatrixStack matrixStack, final float n, final float n2, final float n3, final float n4, final float n5, final float n6, final Color color) {

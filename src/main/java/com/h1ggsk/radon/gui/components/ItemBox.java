@@ -62,8 +62,8 @@ public final class ItemBox extends Component {
         TextRenderer.drawString(String.valueOf(this.setting.getName()), drawContext, n4, n5 - 8, this.TEXT_COLOR.getRGB());
         final int n6 = n4 + TextRenderer.getWidth(this.setting.getName() + ": ") + 5;
         final int n7 = n5 - 11;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.ITEM_BORDER, n6, n7, n6 + 22, n7 + 22, 4.0, 4.0, 4.0, 4.0, 50.0);
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), this.ITEM_BG, n6 + 1, n7 + 1, n6 + 22 - 1, n7 + 22 - 1, 3.5, 3.5, 3.5, 3.5, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.ITEM_BORDER, n6, n7, n6 + 22, n7 + 22, 4.0, 4.0, 4.0, 4.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, this.ITEM_BG, n6 + 1, n7 + 1, n6 + 22 - 1, n7 + 22 - 1, 3.5, 3.5, 3.5, 3.5, 50.0);
         final Item a = this.setting.getItem();
         if (a != null && a != Items.AIR) {
             drawContext.drawItem(new ItemStack(a), n6 + 3, n7 + 3);

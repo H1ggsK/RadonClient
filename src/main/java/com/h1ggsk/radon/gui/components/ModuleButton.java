@@ -52,21 +52,21 @@ public final class ModuleButton {
         this.offset = offset;
         this.extended = false;
         this.settingOffset = parent.getHeight();
-        for (final Object next : module.getSettings()) {
+        for (final Setting next : module.getSettings()) {
             if (next instanceof BooleanSetting) {
-                this.settings.add(new Checkbox(this, (Setting) next, this.settingOffset));
+                this.settings.add(new Checkbox(this, next, this.settingOffset));
             } else if (next instanceof NumberSetting) {
-                this.settings.add(new NumberBox(this, (Setting) next, this.settingOffset));
+                this.settings.add(new NumberBox(this, next, this.settingOffset));
             } else if (next instanceof ModeSetting) {
-                this.settings.add(new ModeBox(this, (Setting) next, this.settingOffset));
+                this.settings.add(new ModeBox(this, next, this.settingOffset));
             } else if (next instanceof BindSetting) {
-                this.settings.add(new Keybind(this, (Setting) next, this.settingOffset));
+                this.settings.add(new Keybind(this, next, this.settingOffset));
             } else if (next instanceof StringSetting) {
-                this.settings.add(new TextBox(this, (Setting) next, this.settingOffset));
+                this.settings.add(new TextBox(this, next, this.settingOffset));
             } else if (next instanceof MinMaxSetting) {
-                this.settings.add(new Slider(this, (Setting) next, this.settingOffset));
+                this.settings.add(new Slider(this, next, this.settingOffset));
             } else if (next instanceof ItemSetting) {
-                this.settings.add(new ItemBox(this, (Setting) next, this.settingOffset));
+                this.settings.add(new ItemBox(this, next, this.settingOffset));
             }
             this.settingOffset += parent.getHeight();
         }
@@ -76,9 +76,8 @@ public final class ModuleButton {
         if (this.parent.getY() + this.offset > MinecraftClient.getInstance().getWindow().getHeight()) {
             return;
         }
-        final Iterator<Component> iterator = this.settings.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().onUpdate();
+        for (Component setting : this.settings) {
+            setting.onUpdate();
         }
         this.updateAnimations(n, n2, n3);
         final int x = this.parent.getX();
@@ -116,14 +115,14 @@ public final class ModuleButton {
     }
 
     private void renderButtonBackground(final DrawContext drawContext, final int n, final int n2, final int n3, final int n4) {
-        final Color a = ColorUtil.a(new Color(25, 25, 30, 230), this.HOVER_COLOR, this.hoverAnimation);
-        final boolean b = this.parent.moduleButtons.get(this.parent.moduleButtons.size() - 1) == this;
-        if (b && !this.extended) {
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), a, n, n2, n + n3, n2 + n4, 0.0, 0.0, 6.0, 6.0, 50.0);
-        } else if (b && this.extended) {
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), a, n, n2, n + n3, n2 + n4, 0.0, 0.0, 0.0, 0.0, 50.0);
+        final Color color = ColorUtil.a(new Color(25, 25, 30, 230), this.HOVER_COLOR, this.hoverAnimation);
+        final boolean thisIsLast = this.parent.moduleButtons.getLast() == this;
+        if (thisIsLast && !this.extended) {
+            RenderUtils.renderRoundedQuad(drawContext, color, n, n2, n + n3, n2 + n4, 0.0, 0.0, 6.0, 6.0, 50.0);
+        } else if (thisIsLast && this.extended) {
+            RenderUtils.renderRoundedQuad(drawContext, color, n, n2, n + n3, n2 + n4, 0.0, 0.0, 0.0, 0.0, 50.0);
         } else {
-            drawContext.fill(n, n2, n + n3, n2 + n4, a.getRGB());
+            drawContext.fill(n, n2, n + n3, n2 + n4, color.getRGB());
         }
         if (this.parent.moduleButtons.indexOf(this) > 0) {
             drawContext.fill(n + 4, n2, n + n3 - 4, n2 + 1, new Color(60, 60, 65, 100).getRGB());
@@ -139,7 +138,7 @@ public final class ModuleButton {
         }
         final float n4 = 5.0f * this.enabledAnimation;
         if (n4 > 0.1f) {
-            RenderUtils.renderRoundedQuad(drawContext.getMatrices(), ColorUtil.a(this.DISABLED_COLOR, color, this.enabledAnimation), n, n2 + 2, n + n4, n2 + n3 - 2, 1.5, 1.5, 1.5, 1.5, 60.0);
+            RenderUtils.renderRoundedQuad(drawContext, ColorUtil.a(this.DISABLED_COLOR, color, this.enabledAnimation), n, n2 + 2, n + n4, n2 + n3 - 2, 1.5, 1.5, 1.5, 1.5, 60.0);
         }
     }
 
@@ -147,7 +146,7 @@ public final class ModuleButton {
         TextRenderer.drawString(this.module.getName(), drawContext, n + 10, n2 + n4 / 2 - 6, ColorUtil.a(this.DISABLED_COLOR, this.ENABLED_COLOR, this.enabledAnimation).getRGB());
         final int n5 = n + n3 - 40;
         final int n6 = n2 + n4 / 2 - 6;
-        RenderUtils.renderRoundedQuad(drawContext.getMatrices(), ColorUtil.a(new Color(60, 60, 65, 200), new Color(65, 105, 225, 100), this.enabledAnimation), n5, n6, n5 + 24.0f, n6 + 12.0f, 6.0, 6.0, 6.0, 6.0, 50.0);
+        RenderUtils.renderRoundedQuad(drawContext, ColorUtil.a(new Color(60, 60, 65, 200), new Color(65, 105, 225, 100), this.enabledAnimation), n5, n6, n5 + 24.0f, n6 + 12.0f, 6.0, 6.0, 6.0, 6.0, 50.0);
         final float n7 = n5 + 6.0f + 12.0f * this.enabledAnimation;
         RenderUtils.renderCircle(drawContext, ColorUtil.a(new Color(180, 180, 180), this.ENABLED_COLOR, this.enabledAnimation), n7, n6 + 6.0f, 5.0, 12);
         if (this.module.isEnabled()) {
@@ -158,13 +157,12 @@ public final class ModuleButton {
     private void renderSettings(final DrawContext drawContext, final int n, final int n2, final float n3) {
         final int n4 = this.parent.getY() + this.offset + this.parent.getHeight();
         final double animation = this.animation.getAnimation();
-        RenderSystem.enableScissor(this.parent.getX(), Radon.mc.getWindow().getHeight() - (n4 + (int) animation), this.parent.getWidth(), (int) animation);
-        final Iterator<Component> iterator = this.settings.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().render(drawContext, n, n2 - n4, n3);
+        drawContext.enableScissor(this.parent.getX(), Radon.mc.getWindow().getHeight() - (n4 + (int) animation), this.parent.getWidth(), (int) animation);
+        for (Component setting : this.settings) {
+            setting.render(drawContext, n, n2 - n4, n3);
         }
         this.renderSliderControls(drawContext);
-        RenderSystem.disableScissor();
+        drawContext.disableScissor();
     }
 
     private void renderSliderControls(final DrawContext drawContext) {
@@ -188,24 +186,21 @@ public final class ModuleButton {
     }
 
     public void onExtend() {
-        final Iterator<ModuleButton> iterator = this.parent.moduleButtons.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().extended = false;
+        for (ModuleButton moduleButton : this.parent.moduleButtons) {
+            moduleButton.extended = false;
         }
     }
 
     public void keyPressed(final int n, final int n2, final int n3) {
-        final Iterator<Component> iterator = this.settings.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().keyPressed(n, n2, n3);
+        for (Component setting : this.settings) {
+            setting.keyPressed(n, n2, n3);
         }
     }
 
     public void mouseDragged(final double n, final double n2, final int n3, final double n4, final double n5) {
         if (this.extended) {
-            final Iterator<Component> iterator = this.settings.iterator();
-            while (iterator.hasNext()) {
-                iterator.next().mouseDragged(n, n2, n3, n4, n5);
+            for (Component setting : this.settings) {
+                setting.mouseDragged(n, n2, n3, n4, n5);
             }
         }
     }
@@ -254,16 +249,14 @@ public final class ModuleButton {
             enabledAnimation = 0.0f;
         }
         this.enabledAnimation = enabledAnimation;
-        final Iterator<Component> iterator = this.settings.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().onGuiClose();
+        for (Component setting : this.settings) {
+            setting.onGuiClose();
         }
     }
 
     public void mouseReleased(final double n, final double n2, final int n3) {
-        final Iterator<Component> iterator = this.settings.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().mouseReleased(n, n2, n3);
+        for (Component setting : this.settings) {
+            setting.mouseReleased(n, n2, n3);
         }
     }
 
