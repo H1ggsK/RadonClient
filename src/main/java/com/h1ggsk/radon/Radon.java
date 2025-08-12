@@ -10,6 +10,7 @@ import com.h1ggsk.radon.manager.ConfigManager;
 import com.h1ggsk.radon.manager.EventManager;
 import com.h1ggsk.radon.module.ModuleManager;
 import com.h1ggsk.radon.utils.rotation.RotationFaker;
+import com.h1ggsk.radon.utils.state.RenderStates;
 
 import java.io.File;
 
@@ -45,6 +46,7 @@ public final class Radon {
             rotationFaker = new RotationFaker();
             Radon.mc = MinecraftClient.getInstance();
             Commands.init();
+            RenderStates.init();
         } catch (Throwable _t) {
             _t.printStackTrace(System.err);
         }

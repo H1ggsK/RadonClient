@@ -149,9 +149,9 @@ public final class ModuleButton {
         final int n6 = n2 + n4 / 2 - 6;
         RenderUtils.renderRoundedQuad(drawContext.getMatrices(), ColorUtil.a(new Color(60, 60, 65, 200), new Color(65, 105, 225, 100), this.enabledAnimation), n5, n6, n5 + 24.0f, n6 + 12.0f, 6.0, 6.0, 6.0, 6.0, 50.0);
         final float n7 = n5 + 6.0f + 12.0f * this.enabledAnimation;
-        RenderUtils.renderCircle(drawContext.getMatrices(), ColorUtil.a(new Color(180, 180, 180), this.ENABLED_COLOR, this.enabledAnimation), n7, n6 + 6.0f, 5.0, 12);
+        RenderUtils.renderCircle(drawContext, ColorUtil.a(new Color(180, 180, 180), this.ENABLED_COLOR, this.enabledAnimation), n7, n6 + 6.0f, 5.0, 12);
         if (this.module.isEnabled()) {
-            RenderUtils.renderCircle(drawContext.getMatrices(), new Color(this.ENABLED_COLOR.getRed(), this.ENABLED_COLOR.getGreen(), this.ENABLED_COLOR.getBlue(), 30), n7, n6 + 6.0f, 8.0, 16);
+            RenderUtils.renderCircle(drawContext, new Color(this.ENABLED_COLOR.getRed(), this.ENABLED_COLOR.getGreen(), this.ENABLED_COLOR.getBlue(), 30), n7, n6 + 6.0f, 8.0, 16);
         }
     }
 
@@ -182,9 +182,9 @@ public final class ModuleButton {
     }
 
     private void renderModernSliderKnob(final DrawContext drawContext, final double n, final double n2, final Color color) {
-        RenderUtils.renderCircle(drawContext.getMatrices(), new Color(0, 0, 0, 100), n, n2, 7.0, 18);
-        RenderUtils.renderCircle(drawContext.getMatrices(), color, n, n2, 5.5, 16);
-        RenderUtils.renderCircle(drawContext.getMatrices(), new Color(255, 255, 255, 70), n, n2 - 1.0, 3.0, 12);
+        RenderUtils.renderCircle(drawContext, new Color(0, 0, 0, 100), n, n2, 7.0, 18);
+        RenderUtils.renderCircle(drawContext, color, n, n2, 5.5, 16);
+        RenderUtils.renderCircle(drawContext, new Color(255, 255, 255, 70), n, n2 - 1.0, 3.0, 12);
     }
 
     public void onExtend() {

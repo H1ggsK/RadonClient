@@ -1,6 +1,7 @@
 package com.h1ggsk.radon.utils;
 
 import com.h1ggsk.radon.Radon;
+import com.h1ggsk.radon.utils.state.CircleRenderState;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -139,19 +141,18 @@ public final class RenderUtils {
         GL11.glEnable(3089);
     }
 
-    public static void renderCircle(final MatrixStack matrixStack, final Color color, final double n, final double n2, final double n3, final int n4) {
-        final int clamp = MathHelper.clamp(n4, 4, 360);
-        final int rgb = color.getRGB();
-        final Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
-        setup();
-        RenderSystem.setShader((Supplier) GameRenderer::getPositionColorProgram);
-        final BufferBuilder begin = Tessellator.getInstance().begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
-        for (int i = 0; i < 360; i += Math.min(360 / clamp, 360 - i)) {
-            final double radians = Math.toRadians(i);
-            begin.vertex(positionMatrix, (float) (n + Math.sin(radians) * n3), (float) (n2 + Math.cos(radians) * n3), 0.0f).color((rgb >> 16 & 0xFF) / 255.0f, (rgb >> 8 & 0xFF) / 255.0f, (rgb & 0xFF) / 255.0f, (rgb >> 24 & 0xFF) / 255.0f);
-        }
-        BufferRenderer.drawWithGlobalProgram(begin.end());
-        cleanup();
+    public static void renderCircle(final DrawContext context, final Color color, final double centerX, final double centerY, final double radius, final int resolution) {
+        context.state.addSimpleElement(
+                new CircleRenderState(
+                        context.getMatrices(),
+                        context.scissorStack.peekLast(),
+                        color,
+                        centerX,
+                        centerY,
+                        radius,
+                        resolution
+                )
+        );
     }
 
     public static void renderShaderRect(final MatrixStack matrixStack, final Color color, final Color color2, final Color color3, final Color color4, final float n, final float n2, final float n3, final float n4, final float n5, final float n6) {
@@ -298,12 +299,12 @@ public final class RenderUtils {
             return;
         }
         final float n5 = n3 / 16.0f;
-        final MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
+        final Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
         matrices.translate((float) n, (float) n2, (float) n4);
         matrices.scale(n5, n5, 1.0f);
         drawContext.drawItem(itemStack, 0, 0);
-        matrices.pop();
+        matrices.popMatrix();
     }
 
     private static void genericAABBRender(VertexFormat.DrawMode mode, VertexFormat format, Supplier<ShaderProgram> shader, Matrix4f stack, Vec3d start, Vec3d dimensions, Color color, RenderAction action) {

@@ -25,6 +25,8 @@
     "FireworkRocketEntityMixin",
     "FrustumAccessor",
     "GameRendererMixin",
+    "GuiRendererDrawAccessor",
+    "GuiRendererMixin",
     "HandledScreenMixin",
     "HeightContextMixin",
     "HeightRangePlacementModifierAccessor",
