@@ -64,3 +64,4 @@ Credits:
 - `TwoNick` for the crack of Krypton
 - `ryduzzz` for the sick intro animation
 - Apologies to `01rin_nac`
+- Fuck Fornicator

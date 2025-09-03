@@ -12,7 +12,6 @@
     "BrightnessGetterMixin",
     "CameraMixin",
     "ChunkOcclusionDataBuilderMixin",
-    "ClientChunkMapAccessor",
     "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerAccessor",
     "ClientPlayerInteractionManagerMixin",
