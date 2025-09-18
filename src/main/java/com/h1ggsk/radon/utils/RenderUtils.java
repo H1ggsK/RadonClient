@@ -4,8 +4,8 @@ import com.h1ggsk.radon.Radon;
 import com.h1ggsk.radon.utils.state.CircleRenderState;
 import com.h1ggsk.radon.utils.state.RoundedOutlineRenderState;
 import com.h1ggsk.radon.utils.state.RoundedQuadRenderState;
+import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.VertexSorter;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
@@ -27,8 +27,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class RenderUtils {
-    public static VertexSorter vertexSorter;
     public static boolean rendering3D;
+
+    private static final ProjectionMatrix2 matrix = new ProjectionMatrix2("radon-projection-matrix", -10, 100, true);
 
     public static Vec3d getCameraPos() {
         return getCamera().getPos();
@@ -60,13 +61,12 @@ public final class RenderUtils {
     }
 
     public static void unscaledProjection() {
-        RenderUtils.vertexSorter = RenderSystem.getVertexSorting();
-        RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0.0f, (float) Radon.mc.getWindow().getFramebufferWidth(), (float) Radon.mc.getWindow().getFramebufferHeight(), 0.0f, 1000.0f, 21000.0f), VertexSorter.BY_Z);
+        RenderSystem.setProjectionMatrix(matrix.set(Radon.mc.getWindow().getFramebufferWidth(), Radon.mc.getWindow().getFramebufferHeight()), ProjectionType.ORTHOGRAPHIC);
         RenderUtils.rendering3D = false;
     }
 
     public static void scaledProjection() {
-        RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0.0f, (float) (Radon.mc.getWindow().getFramebufferWidth() / Radon.mc.getWindow().getScaleFactor()), (float) (Radon.mc.getWindow().getFramebufferHeight() / Radon.mc.getWindow().getScaleFactor()), 0.0f, 1000.0f, 21000.0f), RenderUtils.vertexSorter);
+        RenderSystem.setProjectionMatrix(matrix.set((float) Radon.mc.getWindow().getFramebufferWidth() / Radon.mc.getWindow().getScaleFactor(), (float) Radon.mc.getWindow().getFramebufferHeight() / Radon.mc.getWindow().getScaleFactor()), ProjectionType.PERSPECTIVE);
         RenderUtils.rendering3D = true;
     }
 
@@ -246,7 +246,7 @@ public final class RenderUtils {
         final float n5 = n3 / 16.0f;
         final Matrix3x2fStack matrices = drawContext.getMatrices();
         matrices.pushMatrix();
-        matrices.translate((float) n, (float) n2, (float) n4);
+        matrices.translate((float) n, (float) n2);
         matrices.scale(n5, n5);
         drawContext.drawItem(itemStack, 0, 0);
         matrices.popMatrix();

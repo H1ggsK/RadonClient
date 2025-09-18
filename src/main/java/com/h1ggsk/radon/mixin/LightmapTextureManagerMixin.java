@@ -14,13 +14,13 @@ public abstract class LightmapTextureManagerMixin {
         method = "update",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/texture/NativeImage;setColor(III)V"
+            target = "Ljava/lang/Math;max(FF)F"
         )
     )
     private void onUpdateLightmap(Args args) {
         Fullbright fullbright = (Fullbright) Main.getRadon().getModuleManager().getModuleByClass(Fullbright.class);
         if (fullbright != null && fullbright.isEnabled()) {
-            args.set(2, 0xFFFFFFFF);
+            args.set(1, 0xFFFFFFFF);
         }
     }
 }

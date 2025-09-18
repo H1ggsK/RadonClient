@@ -1,14 +1,5 @@
 package com.h1ggsk.radon.module.modules.render;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.PlayerSkinDrawer;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
-import net.minecraft.util.Hand;
 import com.h1ggsk.radon.event.EventListener;
 import com.h1ggsk.radon.event.events.PacketSendEvent;
 import com.h1ggsk.radon.event.events.Render2DEvent;
@@ -16,11 +7,15 @@ import com.h1ggsk.radon.module.Category;
 import com.h1ggsk.radon.module.Module;
 import com.h1ggsk.radon.module.setting.BooleanSetting;
 import com.h1ggsk.radon.module.setting.NumberSetting;
-import com.h1ggsk.radon.utils.ColorUtil;
-import com.h1ggsk.radon.utils.EncryptedString;
-import com.h1ggsk.radon.utils.MathUtil;
-import com.h1ggsk.radon.utils.RenderUtils;
-import com.h1ggsk.radon.utils.TextRenderer;
+import com.h1ggsk.radon.utils.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.PlayerSkinDrawer;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.util.Hand;
 import org.joml.Matrix3x2fStack;
 
 import java.awt.*;
@@ -58,8 +53,6 @@ public final class TargetHUD extends Module {
         final int f = this.xPosition.getIntValue();
         final int f2 = this.yPosition.getIntValue();
         final float g = this.fadeSpeed.getFloatValue();
-        final Color h = this.primaryColor;
-        final Color i = this.backgroundColor;
         RenderUtils.unscaledProjection();
         final boolean b = mc.player.getAttacking() != null && mc.player.getAttacking() instanceof PlayerEntity && mc.player.getAttacking().isAlive();
         final boolean b2 = !this.timeoutEnabled.getValue() || System.currentTimeMillis() - this.lastAttackTime <= 10000L;
@@ -81,7 +74,7 @@ public final class TargetHUD extends Module {
             matrices.scale(n3, n3);
             matrices.translate((float) (-f), (float) (-f2));
             this.currentHealth = RenderUtils.fast(this.currentHealth, getAttacking.getHealth() + getAttacking.getAbsorptionAmount(), g * 0.5f);
-            this.a(context, f, f2, (PlayerEntity) getAttacking, playerListEntry, n2, h, i);
+            this.a(context, f, f2, (PlayerEntity) getAttacking, playerListEntry, n2, this.primaryColor, this.backgroundColor);
             matrices.popMatrix();
         }
         RenderUtils.scaledProjection();
@@ -95,7 +88,7 @@ public final class TargetHUD extends Module {
         RenderUtils.renderRoundedQuad(drawContext, color3, n + 20, n2 + 180 - 3, n + 300 - 20, n2 + 180, 0.0, 0.0, 0.0, 0.0, 10.0);
         if (playerListEntry != null) {
             RenderUtils.renderRoundedQuad(drawContext, new Color(30, 30, 30, (int) (200.0f * n3)), n + 15, n2 + 15, n + 85, n2 + 85, 5.0, 5.0, 5.0, 5.0, 10.0);
-            PlayerSkinDrawer.draw(drawContext, playerListEntry.getSkinTextures().texture(), n + 25, n2 + 25, 50);
+            PlayerSkinDrawer.draw(drawContext, playerListEntry.getSkinTextures(), n + 25, n2 + 25, 50);
             TextRenderer.drawString(playerEntity.getName().getString(), drawContext, n + 100, n2 + 25, ColorUtil.a((int) (System.currentTimeMillis() % 1000L / 1000.0f), 1).getRGB());
             TextRenderer.drawString(MathUtil.roundToNearest(playerEntity.distanceTo(mc.player), 1.0) + " blocks away", drawContext, n + 100, n2 + 45, Color.WHITE.getRGB());
             RenderUtils.renderRoundedQuad(drawContext, new Color(60, 60, 60, (int) (200.0f * n3)), n + 15, n2 + 95, n + 300 - 15, n2 + 110, 5.0, 5.0, 5.0, 5.0, 10.0);
@@ -106,18 +99,8 @@ public final class TargetHUD extends Module {
             TextRenderer.drawString(s, drawContext, n + 15 + (int) n4 / 2 - TextRenderer.getWidth(s) / 2, n2 + 95, Color.WHITE.getRGB());
             final int n5 = n2 + 120;
             this.a(drawContext, n + 15, n5, 80, 45, "PING", playerListEntry.getLatency() + "ms", this.a(playerListEntry.getLatency(), n3), color3, n3);
-            String s2;
-            if (playerListEntry != null) {
-                s2 = "PLAYER";
-            } else {
-                s2 = "BOT";
-            }
-            Color color4;
-            if (playerListEntry != null) {
-                color4 = new Color(100, 255, 100, (int) (255.0f * n3));
-            } else {
-                color4 = new Color(255, 100, 100, (int) (255.0f * n3));
-            }
+            String s2 = "PLAYER";
+            Color color4 = new Color(100, 255, 100, (int) (255.0f * n3));
             this.a(drawContext, n + 100 + 5, n5, 80, 45, "TYPE", s2, color4, color3, n3);
             if (playerEntity.hurtTime > 0) {
                 this.a(drawContext, n + 200 + 5, n5, 80, 45, "HURT", "" + playerEntity.hurtTime, this.b(playerEntity.hurtTime, n3), color3, n3);

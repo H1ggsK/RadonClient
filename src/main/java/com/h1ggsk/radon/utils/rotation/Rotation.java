@@ -1,12 +1,11 @@
 package com.h1ggsk.radon.utils.rotation;
 
 import com.h1ggsk.radon.Radon;
-import org.joml.Quaternionf;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
 
 public record Rotation(float yaw, float pitch)
 {
@@ -22,13 +21,13 @@ public record Rotation(float yaw, float pitch)
 	
 	public void sendPlayerLookPacket()
 	{
-		sendPlayerLookPacket(MC.player.isOnGround());
+		sendPlayerLookPacket(MC.player.isOnGround(), MC.player.horizontalCollision);
 	}
 	
-	public void sendPlayerLookPacket(boolean onGround)
+	public void sendPlayerLookPacket(boolean onGround, boolean horizontalCollision)
 	{
 		MC.player.networkHandler.sendPacket(
-			new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, onGround));
+			new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, onGround, horizontalCollision));
 	}
 	
 	public double getAngleTo(Rotation other)
