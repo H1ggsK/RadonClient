@@ -1,14 +1,5 @@
 package com.h1ggsk.radon.module.modules.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 import com.h1ggsk.radon.event.EventListener;
 import com.h1ggsk.radon.event.events.Render3DEvent;
 import com.h1ggsk.radon.module.Category;
@@ -18,11 +9,17 @@ import com.h1ggsk.radon.module.setting.BooleanSetting;
 import com.h1ggsk.radon.module.setting.NumberSetting;
 import com.h1ggsk.radon.utils.ColorUtil;
 import com.h1ggsk.radon.utils.EncryptedString;
-import com.h1ggsk.radon.utils.Utils;
 import com.h1ggsk.radon.utils.RenderUtils;
+import com.h1ggsk.radon.utils.Utils;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
-import java.util.function.Supplier;
 
 public final class PlayerESP extends Module {
     private final NumberSetting alpha = new NumberSetting(EncryptedString.of("Alpha"), 0.0, 255.0, 100.0, 1.0);
@@ -46,7 +43,7 @@ public final class PlayerESP extends Module {
 
     @EventListener
     public void onRender3D(final Render3DEvent render3DEvent) {
-        for (final Object next : mc.world.getPlayers()) {
+        for (final AbstractClientPlayerEntity next : mc.world.getPlayers()) {
             if (next != mc.player) {
                 final Camera camera = RenderUtils.getCamera();
                 if (camera != null) {
@@ -57,18 +54,19 @@ public final class PlayerESP extends Module {
                     a.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0f));
                     a.translate(-pos.x, -pos.y, -pos.z);
                 }
-                final double lerp = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), ((PlayerEntity) next).lastX, ((PlayerEntity) next).getX());
-                final double lerp2 = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), ((PlayerEntity) next).lastY, ((PlayerEntity) next).getY());
-                final double lerp3 = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), ((PlayerEntity) next).lastZ, ((PlayerEntity) next).getZ());
-                RenderUtils.renderFilledBox(render3DEvent.matrixStack, (float) lerp - ((PlayerEntity) next).getWidth() / 2.0f, (float) lerp2, (float) lerp3 - ((PlayerEntity) next).getWidth() / 2.0f, (float) lerp + ((PlayerEntity) next).getWidth() / 2.0f, (float) lerp2 + ((PlayerEntity) next).getHeight(), (float) lerp3 + ((PlayerEntity) next).getWidth() / 2.0f, Utils.getMainColor(this.alpha.getIntValue(), 1).brighter());
+                final double lerp = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), next.lastX, next.getX());
+                final double lerp2 = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), next.lastY, next.getY());
+                final double lerp3 = MathHelper.lerp(RenderTickCounter.ONE.getTickProgress(true), next.lastZ, next.getZ());
+                RenderUtils.renderFilledBox(render3DEvent.matrixStack, (float) lerp - next.getWidth() / 2.0f, (float) lerp2, (float) lerp3 - next.getWidth() / 2.0f, (float) lerp + next.getWidth() / 2.0f, (float) lerp2 + next.getHeight(), (float) lerp3 + next.getWidth() / 2.0f, Utils.getMainColor(this.alpha.getIntValue(), 1).brighter());
                 if (this.tracers.getValue()) {
-                    RenderUtils.renderLine(render3DEvent.matrixStack, Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), ((PlayerEntity) next).getLerpedPos(RenderTickCounter.ONE.getTickProgress(true)));
+                    RenderUtils.renderLine(render3DEvent.matrixStack, Utils.getMainColor(255, 1), mc.crosshairTarget.getPos(), next.getLerpedPos(RenderTickCounter.ONE.getTickProgress(true)));
                 }
                 render3DEvent.matrixStack.pop();
             }
         }
     }
 
+    /*
     private void renderPlayerOutline(final PlayerEntity playerEntity, final Color color, final MatrixStack matrixStack) {
         final float n = color.brighter().getRed() / 255.0f;
         final float n2 = color.brighter().getGreen() / 255.0f;
@@ -115,6 +113,7 @@ public final class PlayerESP extends Module {
         }
         matrixStack.pop();
     }
+     */
 
     private Color getColorWithAlpha(final int a) {
         final int f = Radon.redColor.getIntValue();

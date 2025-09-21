@@ -1,7 +1,11 @@
 package com.h1ggsk.radon.font;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.*;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -100,18 +104,18 @@ public final class GlyphPage {
             final byte[] byteArray = output.toByteArray();
             final ByteBuffer data = BufferUtils.createByteBuffer(byteArray.length).put(byteArray);
             data.flip();
-            this.texture = new NativeImageBackedTexture(NativeImage.read(data));
+            this.texture = new NativeImageBackedTexture(() -> "Radon Glyph Page", NativeImage.read(data));
         } catch (Throwable _t) {
             _t.printStackTrace(System.err);
         }
     }
 
     public void bind() {
-        RenderSystem.setShaderTexture(0, this.texture.getGlId());
+        RenderSystem.setShaderTexture(0, this.texture.getGlTextureView());
     }
 
     public void unbind() {
-        RenderSystem.setShaderTexture(0, 0);
+        RenderSystem.setShaderTexture(0, null);
     }
 
     public float drawChar(MatrixStack stack, char ch, float x, float y, float r, float b, float g, float alpha) {

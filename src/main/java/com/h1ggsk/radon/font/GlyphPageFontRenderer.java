@@ -1,8 +1,12 @@
 package com.h1ggsk.radon.font;
 
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import com.h1ggsk.radon.utils.EncryptedString;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.awt.*;
 import java.util.Objects;
@@ -139,15 +143,15 @@ public final class GlyphPageFontRenderer {
     }
 
     public int drawCenteredString(final MatrixStack matrices, final CharSequence text, final double x, final double y, final float scale, final int color) {
-        return this.drawString(matrices, text, (float) x - this.getStringWidth(text) / 2, (float) y, scale, color, false);
+        return this.drawString(matrices, text, (float) x - (float) this.getStringWidth(text) / 2, (float) y, scale, color, false);
     }
 
     public int drawCenteredString(final MatrixStack matrices, final CharSequence text, final double x, final double y, final int color) {
-        return this.drawString(matrices, text, (float) x - this.getStringWidth(text) / 2, (float) y, color, false);
+        return this.drawString(matrices, text, (float) x - (float) this.getStringWidth(text) / 2, (float) y, color, false);
     }
 
     public int drawCenteredStringWithShadow(final MatrixStack matrices, final CharSequence text, final double x, final double y, final int color) {
-        return this.drawString(matrices, text, (float) x - this.getStringWidth(text) / 2, (float) y, color, true);
+        return this.drawString(matrices, text, (float) x - (float) this.getStringWidth(text) / 2, (float) y, color, true);
     }
 
     public int drawString(final MatrixStack matrices, final CharSequence text, final float x, final float y, final float scale, final int color, final boolean shadow) {
